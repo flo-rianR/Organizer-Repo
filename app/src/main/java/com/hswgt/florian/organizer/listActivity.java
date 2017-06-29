@@ -2,6 +2,10 @@ package com.hswgt.florian.organizer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,8 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import Adapter.RecyclerEntryAdapter;
 import database.Entry;
 import database.MySQLiteHelper;
 
@@ -22,6 +28,7 @@ public class listActivity extends AppCompatActivity
 {
     private MySQLiteHelper eDB;
     ArrayAdapter<String> adapter;
+    private RecyclerEntryAdapter recyclerAdapter;
     List<Entry> entries;
     List<String> lists;
 
@@ -38,9 +45,9 @@ public class listActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         entries = eDB.getAllEntries();
-        listViewInit();
+        //listViewInit();
         //listStringInit();
-        //listInit();
+        listInit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
@@ -63,7 +70,7 @@ public class listActivity extends AppCompatActivity
 
         return entriesString;
     }
-
+/*
     private void listViewInit()
     {
         final ArrayList<String> entriesString = getEntryAsString(this.entries);
@@ -99,26 +106,22 @@ public class listActivity extends AppCompatActivity
             }
         });
     }
-
-    private ArrayList<String> getListAsString(List<Entry> list)
-    {
-        ArrayList<String> listString = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++)
-        {
-            listString.add(i, list.get(i).getList() + ", " + list.get(i).getDescription());
-        }
-
-        return listString;
-    }
+*/
 
     private void listInit()
     {
-        final ArrayList<String> entriesString = getListAsString(eDB.getListEntries("Liste1"));
-        ListView listView = (ListView) findViewById(R.id.entriesListView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entriesString);
-        listView.setAdapter(adapter);
+        final LinkedList<Entry> entryList = (LinkedList<Entry>) eDB.getListEntries("Liste1");
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.entryrecycler);
+
+        recyclerAdapter = new RecyclerEntryAdapter(entryList, eDB);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.notifyDataSetChanged();
+
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Entry entry = entries.get(position);
@@ -126,6 +129,11 @@ public class listActivity extends AppCompatActivity
                 adapter.remove(adapter.getItem(position));
                 adapter.notifyDataSetChanged();
             }
-        });
+        });*/
+    }
+
+    public void delete(View view)
+    {
+        Log.d("debug", "in delete");
     }
 }
