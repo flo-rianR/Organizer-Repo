@@ -1,5 +1,7 @@
 package Adapter;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,14 +73,26 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     }
 
     @Override
-    public void onClick(View v) {
-        MyViewHolder holder = (MyViewHolder) v.getTag();
-        if(holder.deleteButton.getId() == v.getId())
-        {
-            entries.remove(holder.getAdapterPosition());
-            notifyItemRemoved(holder.getAdapterPosition());
-            notifyItemRangeChanged(holder.getAdapterPosition(), entries.size());
-            notifyDataSetChanged();
-        }
+    public void onClick(final View v) {
+        new AlertDialog.Builder(v.getContext())
+                .setTitle("Löschen")
+                .setMessage("Wollen Sie den Eintrag wirklich löschen?")
+                .setNegativeButton("Nein", null)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MyViewHolder holder = (MyViewHolder) v.getTag();
+                        if(holder.deleteButton.getId() == v.getId())
+                        {
+                            eDB.deleteEntry(entries.get(holder.getAdapterPosition()));
+                            entries.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(holder.getAdapterPosition());
+                            notifyItemRangeChanged(holder.getAdapterPosition(), entries.size());
+                            notifyDataSetChanged();
+                        }
+                    }
+                }).create().show();
+
+
     }
 }
