@@ -100,16 +100,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     public List<Entry> getListEntries(String list)
     {
         List<Entry> entries  = new LinkedList<>();
-        Log.d("test",list);
         String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + "\"" + list + "\"";
-        Log.d("test", query);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Entry entry;
         if(cursor.moveToFirst())
         {
             do{
-                Log.d("test", cursor.getString(1));
                 entry = new Entry();
                 entry.setID(Integer.parseInt(cursor.getString(0)));
                 entry.setList(cursor.getString(1));
