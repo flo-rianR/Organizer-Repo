@@ -1,18 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hswgt.florian.organizer.MainActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/listeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="21dp"
+        android:ems="10"
+        android:hint="Liste"
+        android:inputType="text"/>
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/listeEditText"
+        android:layout_below="@+id/listeEditText"
+        android:layout_marginTop="21dp"
+        android:ems="10"
+        android:hint="description"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/createDateEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/descriptionEditText"
+        android:layout_below="@+id/descriptionEditText"
+        android:layout_marginTop="21dp"
+        android:ems="10"
+        android:hint="date"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/locationEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/createDateEditText"
+        android:layout_below="@+id/createDateEditText"
+        android:layout_marginTop="21dp"
+        android:ems="10"
+        android:hint="location"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/confirmbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/locationEditText"
+        android:layout_below="@+id/locationEditText"
+        android:layout_marginTop="27dp"
+        android:onClick="confirm"
+        android:text="Confirm" />
+
+    <Button
+        android:id="@+id/switchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/confirmbutton"
+        android:layout_marginBottom="12dp"
+        android:onClick="show"
+        android:text="Show List" />
+
+
+</RelativeLayout>

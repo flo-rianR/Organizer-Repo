@@ -1,10 +1,11 @@
-package com.hswgt.florian.organizer;
+package database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -99,13 +100,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     public List<Entry> getListEntries(String list)
     {
         List<Entry> entries  = new LinkedList<>();
-        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + list;
+        Log.d("test",list);
+        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + "\"" + list + "\"";
+        Log.d("test", query);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Entry entry;
         if(cursor.moveToFirst())
         {
             do{
+                Log.d("test", cursor.getString(1));
                 entry = new Entry();
                 entry.setID(Integer.parseInt(cursor.getString(0)));
                 entry.setList(cursor.getString(1));
@@ -128,7 +132,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         String list;
         if(cursor.moveToFirst()) {
             do {
-                list = cursor.getString(1);
+                list = cursor.getString(0);
                 lists.add(list);
             } while (cursor.moveToNext());
         }

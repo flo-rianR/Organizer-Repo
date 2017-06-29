@@ -1,4 +1,4 @@
-package com.hswgt.florian.organizer;
+package database;
 
 /**
  * Created by Florian on 10.06.2017.
