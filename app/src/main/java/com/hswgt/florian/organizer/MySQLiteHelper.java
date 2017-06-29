@@ -119,6 +119,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         return entries;
     }
 
+    public List<String> getAllLists()
+    {
+        List<String> lists = new LinkedList<>();
+        String query = "SELECT " +  KEY_LIST + " FROM " + TABLE_ENTRY + " GROUP BY " + KEY_LIST;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String list;
+        if(cursor.moveToFirst()) {
+            do {
+                list = cursor.getString(1);
+                lists.add(list);
+            } while (cursor.moveToNext());
+        }
+
+        return lists;
+    }
+
     public void deleteEntry(Entry entry)
     {
         SQLiteDatabase db = this.getWritableDatabase();
