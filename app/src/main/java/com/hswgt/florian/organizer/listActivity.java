@@ -38,9 +38,9 @@ public class listActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         entries = eDB.getAllEntries();
-        //listViewInit();
+        listViewInit();
         //listStringInit();
-        listInit();
+        //listInit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
