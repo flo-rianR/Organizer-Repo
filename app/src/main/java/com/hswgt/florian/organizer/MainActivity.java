@@ -1,17 +1,28 @@
 package com.hswgt.florian.organizer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import database.Entry;
 import database.MySQLiteHelper;
 
+import static android.R.attr.name;
 import static android.R.attr.start;
 import static android.R.id.list;
 
@@ -19,11 +30,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private MySQLiteHelper eDB;
+    ArrayAdapter<String> adapter;
+    List<String> entries;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         eDB = new MySQLiteHelper(this);
+        entries = eDB.getAllLists();
+        listViewInit();
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -37,62 +52,65 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.dbView)
         {
-            final Intent i = new Intent(this, AndroidDatabaseManager.class);
-            startActivity(i);
+
+        }
+        switch (item.getItemId())
+        {
+            case R.id.dbView:
+                final Intent i = new Intent(this, AndroidDatabaseManager.class);
+                startActivity(i);
+                return true;
+            case R.id.addListButton:
+                addListDialog();
+
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void confirm(View view)
+    private void addListDialog()
     {
-        Entry entry;
-        boolean flag = true;
-        EditText listEdit = (EditText)findViewById(R.id.listeEditText);
-        EditText descriptionEdit = (EditText)findViewById(R.id.descriptionEditText);
-        EditText createDateEdit = (EditText)findViewById(R.id.createDateEditText);
-        EditText locationEdit = (EditText)findViewById(R.id.locationEditText);
-        String listText = listEdit.getText().toString();
-        String descriptionText = descriptionEdit.getText().toString();
-        String createDateText = createDateEdit.getText().toString();
-        String locationText = locationEdit.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final EditText input = new EditText(this);
+        input.setHint("Name");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        if(listText.equals(""))
-        {
-            Toast.makeText(MainActivity.this, "Bitte Namen eingeben", Toast.LENGTH_SHORT).show();
-            flag = false;
-        }
-        if(descriptionText.equals(""))
-        {
-            Toast.makeText(MainActivity.this, "Bitte Vornamen eingeben", Toast.LENGTH_SHORT).show();
-            flag = false;
-        }
-        if(createDateText.equals(""))
-        {
-            Toast.makeText(MainActivity.this, "Bitte Geburtstag eingeben", Toast.LENGTH_SHORT).show();
-            flag = false;
-        }
-        if(locationText.equals(""))
-        {
-            Toast.makeText(MainActivity.this, "Bitte Geburtstag eingeben", Toast.LENGTH_SHORT).show();
-            flag = false;
-        }
-        if(flag)
-        {
-            entry = new Entry(listText, descriptionText, createDateText, locationText);
-            eDB.addEntry(entry);
-            listEdit.setText("");
-            descriptionEdit.setText("");
-            createDateEdit.setText("");
-            locationEdit.setText("");
-            Toast.makeText(MainActivity.this, "Hinzufügen erfolgreich", Toast.LENGTH_SHORT).show();
-        }
-
-
+        builder.setTitle("Neue Liste erstellen");
+        builder.setView(input);
+        builder.setNegativeButton("Abbrechen", null);
+        builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText nameEdit = (EditText)findViewById(R.id.listnameEditText);
+                String nameString = input.getText().toString();
+                eDB.addList(nameString);
+                adapter.add(nameString);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        builder.create().show();
     }
 
-    public void show (View view)
+    private void listViewInit()
+    {
+        ListView listView = (ListView) findViewById(R.id.listview);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entries);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                show(position);
+            }
+        });
+    }
+
+    public void show (int position)
     {
         final Intent i = new Intent(this, listActivity.class);
+        i.putExtra("list", entries.get(position));
         startActivity(i);
     }
 }

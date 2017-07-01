@@ -1,5 +1,6 @@
 package com.hswgt.florian.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -45,8 +46,6 @@ public class listActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         entries = eDB.getAllEntries();
-        //listViewInit();
-        //listStringInit();
         listInit();
     }
 
@@ -70,47 +69,13 @@ public class listActivity extends AppCompatActivity
 
         return entriesString;
     }
-/*
-    private void listViewInit()
-    {
-        final ArrayList<String> entriesString = getEntryAsString(this.entries);
-        ListView listView = (ListView) findViewById(R.id.entriesListView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entriesString);
-        listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Entry entry = entries.get(position);
-                eDB.deleteEntry(entry);
-                adapter.remove(adapter.getItem(position));
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    private void listStringInit()
-    {
-        final ArrayList<String> entriesString = new ArrayList<>(eDB.getAllLists());
-        ListView listView = (ListView) findViewById(R.id.entriesListView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entriesString);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Entry entry = entries.get(position);
-                eDB.deleteEntry(entry);
-                adapter.remove(adapter.getItem(position));
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
-*/
 
     private void listInit()
     {
-        final LinkedList<Entry> entryList = (LinkedList<Entry>) eDB.getListEntries("Liste1");
+        Intent i = getIntent();
+        String list = i.getStringExtra("list");
+        final LinkedList<Entry> entryList = (LinkedList<Entry>) eDB.getListEntries(list);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.entryrecycler);
 

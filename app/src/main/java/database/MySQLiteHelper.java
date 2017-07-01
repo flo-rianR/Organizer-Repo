@@ -77,6 +77,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         db.close();
     }
 
+    public void addList(String list)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_LIST, list);
+        db.insert(TABLE_ENTRY,
+                null,
+                values);
+        db.close();
+    }
+
     public List<Entry> getAllEntries()
     {
         List<Entry> entries = new LinkedList<>();
@@ -187,6 +199,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 return alc ;
             }
             return alc;
+
         } catch(SQLException sqlEx){
             Log.d("printing exception", sqlEx.getMessage());
             //if any exceptions are triggered save the error message to cursor an return the arraylist

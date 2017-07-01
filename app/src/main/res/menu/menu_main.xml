@@ -8,4 +8,12 @@
         android:icon="@android:drawable/alert_dark_frame"
         app:showAsAction="collapseActionView"/>
 
+    <item
+        android:id="@+id/addListButton"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Add_Button"
+        app:showAsAction="ifRoom" />
+
+
+
 </menu>
