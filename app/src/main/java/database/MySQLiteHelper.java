@@ -115,7 +115,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     public List<Entry> getListEntries(String list)
     {
         List<Entry> entries  = new LinkedList<>();
-        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + "\"" + list + "\"";
+        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + "\"" + list + "\" AND NOT (" + KEY_DESCRIPTION +
+                                                                                                        " IS NULL OR "+ KEY_CREATEDATE +
+                                                                                                        " IS NULL OR "+ KEY_LOCATION +
+                                                                                                        " IS NULL)";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Entry entry;

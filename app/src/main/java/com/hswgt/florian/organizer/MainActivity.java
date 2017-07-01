@@ -1,7 +1,11 @@
 package com.hswgt.florian.organizer;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -44,16 +48,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        Drawable drawable = menu.findItem(R.id.addListButton).getIcon();
+        if(drawable != null)
+        {
+            drawable.mutate();
+            drawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+        }
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        int id = item.getItemId();
-        if(id == R.id.dbView)
-        {
 
-        }
         switch (item.getItemId())
         {
             case R.id.dbView:
@@ -62,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.addListButton:
                 addListDialog();
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
@@ -81,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                EditText nameEdit = (EditText)findViewById(R.id.listnameEditText);
                 String nameString = input.getText().toString();
                 eDB.addList(nameString);
                 adapter.add(nameString);

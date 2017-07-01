@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hswgt.florian.organizer.R;
@@ -31,13 +32,13 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
         public TextView descriptionText;
-        public Button deleteButton;
+        public ImageButton deleteButton;
 
         public MyViewHolder(View view)
         {
             super(view);
             descriptionText = (TextView) view.findViewById(R.id.descriptionTextView);
-            deleteButton = (Button) view.findViewById(R.id.deleteButton);
+            deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
         }
     }
 
@@ -61,8 +62,9 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Entry entry = entries.get(position);
-        holder.descriptionText.setText(entry.getDescription());
-        Log.d("debug", entry.getDescription());
+        if(entry.getDescription() == null || entry.getCreated_At() == null || entry.getLocation() == null) return;
+            holder.descriptionText.setText(entry.getDescription());
+            Log.d("Debug", entry.getDescription());
 
 
     }

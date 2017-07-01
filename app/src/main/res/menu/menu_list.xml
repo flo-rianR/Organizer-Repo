@@ -3,17 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
-    <item android:id="@+id/dbView"
-        android:title="DatenBank"
-        android:icon="@android:drawable/alert_dark_frame"
-        app:showAsAction="collapseActionView"/>
 
     <item
-        android:id="@+id/addListButton"
+        android:id="@+id/addEntryButton"
         android:icon="@android:drawable/ic_input_add"
         android:title="Add_Button"
         app:showAsAction="ifRoom" />
-
-
 
 </menu>
