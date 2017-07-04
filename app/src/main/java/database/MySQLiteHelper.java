@@ -27,8 +27,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_CREATEDATE = "create_At";
     private static final String KEY_LOCATION = "location";
+    private static final String KEY_LATITUTE = "latitute";
+    private static final String KEY_LONGITUTE = "longitute";
 
-    private static final String[] COLUMNS = {KEY_ID, KEY_LIST, KEY_DESCRIPTION, KEY_CREATEDATE, KEY_LOCATION};
+    private static final String[] COLUMNS = {KEY_ID, KEY_LIST, KEY_DESCRIPTION, KEY_CREATEDATE, KEY_LOCATION, KEY_LATITUTE, KEY_LONGITUTE};
 
     private static final int DATABASE_VERSION = 4;
 
@@ -48,7 +50,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 KEY_LIST + " TEXT, " +
                 KEY_DESCRIPTION + " TEXT, " +
                 KEY_CREATEDATE + " TEXT, " +
-                KEY_LOCATION + " TEXT" +
+                KEY_LOCATION + " TEXT, " +
+                KEY_LATITUTE + " REAL, " +
+                KEY_LONGITUTE + " REAL" +
                 " )";
         db.execSQL(CREATE_ENTRY_TABLE);
 
@@ -70,10 +74,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         values.put(KEY_LIST, entry.getList());
         values.put(KEY_DESCRIPTION, entry.getDescription());
         values.put(KEY_CREATEDATE, entry.getCreated_At());
-        values.put(KEY_LOCATION, entry.getLocation());
+        //values.put(KEY_LOCATION, entry.getLocation());
+        //values.put(KEY_LATITUTE, entry.getLatitute());
+        //values.put(KEY_LONGITUTE, entry.getLongitute());
         db.insert(TABLE_ENTRY,
                 null,
                 values);
+        db.close();
+    }
+
+    public void addLocationToEntry(String list, String description, String location, double latitute, double longitute)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LOCATION + "='" + location + "' WHERE " + KEY_LIST + "='" + list + "' AND " + KEY_DESCRIPTION + "='" + description + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LATITUTE + "='" + latitute + "' WHERE " + KEY_LIST + "='" + list + "' AND " + KEY_DESCRIPTION + "='" + description + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LONGITUTE + "='" + longitute + "' WHERE " + KEY_LIST + "='" + list + "' AND " + KEY_DESCRIPTION + "='" + description + "'";
+        db.execSQL(query);
         db.close();
     }
 
@@ -105,6 +123,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 entry.setDescription(cursor.getString(2));
                 entry.setCreated_At(cursor.getString(3));
                 entry.setLocation(cursor.getString(4));
+                entry.setLatitute(cursor.getDouble(5));
+                entry.setLongitute(cursor.getDouble(6));
 
                 entries.add(entry);
             } while(cursor.moveToNext());
@@ -117,7 +137,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         List<Entry> entries  = new LinkedList<>();
         String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + KEY_LIST + " = " + "\"" + list + "\" AND NOT (" + KEY_DESCRIPTION +
                                                                                                         " IS NULL OR "+ KEY_CREATEDATE +
-                                                                                                        " IS NULL OR "+ KEY_LOCATION +
                                                                                                         " IS NULL)";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -131,6 +150,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 entry.setDescription(cursor.getString(2));
                 entry.setCreated_At(cursor.getString(3));
                 entry.setLocation(cursor.getString(4));
+                entry.setLatitute(cursor.getDouble(5));
+                entry.setLongitute(cursor.getDouble(6));
 
                 entries.add(entry);
             } while(cursor.moveToNext());

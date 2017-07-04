@@ -24,8 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,17 +39,17 @@ import Adapter.RecyclerEntryAdapter;
 import database.Entry;
 import database.MySQLiteHelper;
 
+
 /**
  * Created by Florian on 29.06.2017.
  */
 
 public class listActivity extends AppCompatActivity {
     private MySQLiteHelper eDB;
-    ArrayAdapter<String> adapter;
     private RecyclerEntryAdapter recyclerAdapter;
     List<Entry> entries;
-    List<String> lists;
     LinkedList<Entry> entryList = null;
+    private String description;
 
 
     @Override
@@ -89,34 +91,71 @@ public class listActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addListDialog() {
+    private void addListDialog()
+    {
         final Entry entry = new Entry();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final EditText input = new EditText(this);
-        input.setHint("Beschreibung");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        builder.setTitle("Neuen Eintrag erstellen");
-        builder.setView(input);
-        builder.setNegativeButton("Abbrechen", null);
-        builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+        LayoutInflater linf = LayoutInflater.from(this);
+        final View inflater = linf.inflate(R.layout.dialog_addentry, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Neuen Eintrag erstellen");
+        dialog.setView(inflater);
+
+        final EditText descriptionEditText = (EditText) inflater.findViewById(R.id.descriptionEditText);
+
+        dialog.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String descriptionString = input.getText().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+                description = descriptionEditText.getText().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                 String date = sdf.format(new Date());
+                entry.setDescription(description);
                 entry.setList(getIntent().getStringExtra("list"));
-                entry.setDescription(descriptionString);
                 entry.setCreated_At(date);
-                entry.setLocation("here");
                 eDB.addEntry(entry);
                 entryList.add(entry);
                 recyclerAdapter.notifyDataSetChanged();
+                dialog.cancel();
+                addLocationDialog();
             }
         });
-        builder.create().show();
+        dialog.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
     }
+
+    public void addLocationDialog()
+    {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Ort hinzufügen?");
+        dialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final Intent i = new Intent(listActivity.this, MapsActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("list", getIntent().getStringExtra("list"));
+                extras.putString("description", description);
+                i.putExtras(extras);
+                startActivity(i);
+            }
+        });
+        dialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+
+    }
+
 
 
     private ArrayList<String> getEntryAsString(List<Entry> entries) {
@@ -142,15 +181,10 @@ public class listActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.notifyDataSetChanged();
-
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Entry entry = entries.get(position);
-                eDB.deleteEntry(entry);
-                adapter.remove(adapter.getItem(position));
-                adapter.notifyDataSetChanged();
-            }
-        });*/
+    }
+    public void openMap(View view)
+    {
+        final Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
     }
 }

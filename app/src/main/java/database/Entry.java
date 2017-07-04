@@ -11,15 +11,19 @@ public class Entry
     protected String description;
     protected String created_At;
     protected String location;
+    protected double latitute;
+    protected double longitute;
 
     public Entry(){}
 
-    public Entry( String list, String description, String created_At, String location)
+    public Entry( String list, String description, String created_At, String location, int latitute, int longitute)
     {
         this.list = list;
         this.description = description;
         this.created_At = created_At;
         this.location = location;
+        this.latitute = latitute;
+        this.longitute = longitute;
     }
 
     public int getID() {return id;}
@@ -32,4 +36,8 @@ public class Entry
     public void setCreated_At(String created_At) {this.created_At = created_At;}
     public String getLocation() {return location;}
     public void setLocation(String location) {this.location = location;}
+    public void setLatitute(double latitute) {this.latitute = latitute;}
+    public double getLatitute() {return latitute;}
+    public void setLongitute(double longitute) {this.longitute = longitute;}
+    public double getLongitute() {return longitute;}
 }
