@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +22,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import database.Entry;
+import database.ListModel;
 import database.MySQLiteHelper;
 
 import static android.R.attr.name;
@@ -35,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
 
     private MySQLiteHelper eDB;
     ArrayAdapter<String> adapter;
-    List<String> entries;
+    List<ListModel> listModels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         eDB = new MySQLiteHelper(this);
-        entries = eDB.getAllLists();
+        listModels = eDB.getAllLists();
         listViewInit();
     }
 
@@ -98,15 +101,26 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    private List<String> listToString()
+    {
+
+        List<String> listString = new ArrayList<>();
+        for (ListModel lm : listModels)
+        {
+            Log.d("DEBUG", "Test");
+            listString.add(lm.getList());
+        }
+        return listString;
+    }
+
     private void listViewInit()
     {
         ListView listView = (ListView) findViewById(R.id.listview);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, entries);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listToString());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 show(position);
@@ -117,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     public void show (int position)
     {
         final Intent i = new Intent(this, listActivity.class);
-        i.putExtra("list", entries.get(position));
+        i.putExtra("list", listModels.get(position).getId());
         startActivity(i);
     }
 }

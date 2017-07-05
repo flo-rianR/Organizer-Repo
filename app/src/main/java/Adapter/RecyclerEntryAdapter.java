@@ -62,7 +62,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Entry entry = entries.get(position);
-        if(entry.getDescription() == null || entry.getCreated_At() == null) return;
+        //if(entry.getDescription() == null || entry.getCreated_At() == null) return;
             holder.descriptionText.setText(entry.getDescription());
             Log.d("Debug", entry.getDescription());
 

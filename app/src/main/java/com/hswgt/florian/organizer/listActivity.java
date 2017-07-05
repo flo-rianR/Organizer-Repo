@@ -39,6 +39,8 @@ import Adapter.RecyclerEntryAdapter;
 import database.Entry;
 import database.MySQLiteHelper;
 
+import static android.R.id.list;
+
 
 /**
  * Created by Florian on 29.06.2017.
@@ -47,9 +49,9 @@ import database.MySQLiteHelper;
 public class listActivity extends AppCompatActivity {
     private MySQLiteHelper eDB;
     private RecyclerEntryAdapter recyclerAdapter;
-    List<Entry> entries;
     LinkedList<Entry> entryList = null;
     private String description;
+    private long id;
 
 
     @Override
@@ -62,7 +64,6 @@ public class listActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        entries = eDB.getAllEntries();
         listInit();
     }
 
@@ -111,9 +112,9 @@ public class listActivity extends AppCompatActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                 String date = sdf.format(new Date());
                 entry.setDescription(description);
-                entry.setList(getIntent().getStringExtra("list"));
+                entry.setForeign_key(getIntent().getIntExtra("list", -1));
                 entry.setCreated_At(date);
-                eDB.addEntry(entry);
+                id = eDB.addEntry(entry);
                 entryList.add(entry);
                 recyclerAdapter.notifyDataSetChanged();
                 dialog.cancel();
@@ -140,7 +141,7 @@ public class listActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final Intent i = new Intent(listActivity.this, MapsActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("list", getIntent().getStringExtra("list"));
+                extras.putLong("list", id);
                 extras.putString("description", description);
                 i.putExtras(extras);
                 startActivity(i);
@@ -158,20 +159,16 @@ public class listActivity extends AppCompatActivity {
 
 
 
-    private ArrayList<String> getEntryAsString(List<Entry> entries) {
-        ArrayList<String> entriesString = new ArrayList<>();
-        for (int i = 0; i < entries.size(); i++) {
-            entriesString.add(i, entries.get(i).getList() + ", " + entries.get(i).getDescription());
-        }
-
-        return entriesString;
-    }
-
-
     private void listInit() {
         Intent i = getIntent();
-        String list = i.getStringExtra("list");
+        int list = i.getIntExtra("list", -1);
+        Log.d("deBug", String.valueOf(list));
         entryList = (LinkedList<Entry>) eDB.getListEntries(list);
+        Log.d("debug size", String.valueOf(entryList.size()));
+        for(Entry e : entryList)
+        {
+            Log.d("Debug list", e.getDescription());
+        }
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.entryrecycler);
 
@@ -182,9 +179,5 @@ public class listActivity extends AppCompatActivity {
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.notifyDataSetChanged();
     }
-    public void openMap(View view)
-    {
-        final Intent i = new Intent(this, MapsActivity.class);
-        startActivity(i);
-    }
+
 }
