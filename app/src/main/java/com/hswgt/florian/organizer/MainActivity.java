@@ -31,6 +31,7 @@ import database.MySQLiteHelper;
 
 import static android.R.attr.name;
 import static android.R.attr.start;
+import static android.R.id.input;
 import static android.R.id.list;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 final Intent i = new Intent(this, AndroidDatabaseManager.class);
                 startActivity(i);
                 return true;
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -72,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
     public void addListDialog(View view)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final EditText input = new EditText(this);
-        input.setHint("Name");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LayoutInflater linf = LayoutInflater.from(this);
+        final View inflater = linf.inflate(R.layout.dialog_addlist, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        final EditText input = (EditText) inflater.findViewById(R.id.addListEdittext);
 
         builder.setTitle("Neue Liste erstellen");
-        builder.setView(input);
+        builder.setView(inflater);
         builder.setNegativeButton("Abbrechen", null);
         builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
             @Override

@@ -25,7 +25,7 @@ import database.MySQLiteHelper;
 public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdapter.MyViewHolder> implements View.OnClickListener
 {
     private List<Entry> entries;
-    MySQLiteHelper eDB;
+    private MySQLiteHelper eDB;
 
 
 

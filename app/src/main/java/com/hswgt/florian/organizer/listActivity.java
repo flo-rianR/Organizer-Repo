@@ -83,7 +83,7 @@ public class listActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addListDialog(View view)
+    public void addEntryDialog(View view)
     {
         final Entry entry = new Entry();
 
