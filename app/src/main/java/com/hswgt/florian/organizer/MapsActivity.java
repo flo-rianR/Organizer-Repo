@@ -114,7 +114,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle extras = getIntent().getExtras();
-
                 String location = "";
                 if(address.getPostalCode() != null) location += address.getPostalCode(); location += " ";
                 if(address.getLocality() != null) location += address.getLocality();

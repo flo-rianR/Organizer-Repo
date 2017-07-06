@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String nameString = input.getText().toString();
                 eDB.addList(nameString);
+                listModels = eDB.getAllLists();
                 adapter.add(nameString);
                 adapter.notifyDataSetChanged();
             }
