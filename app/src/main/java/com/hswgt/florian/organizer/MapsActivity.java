@@ -8,10 +8,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,21 +31,40 @@ import database.MySQLiteHelper;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final int PERMISSION_REQUEST_LOCATION = 1;
     private GoogleMap mMap;
     Marker marker;
     private MySQLiteHelper eDB;
+    float zoomLevel = 16;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         eDB = new MySQLiteHelper(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        askForPermission();
+        Log.d("DEBUG", "In oncreate");
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("DEBUG", "In requestpermissionresult");
+
+        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+            Log.d("DEBUG", "granted");
+            Toast.makeText(this, "Berechtigung LOCATION erlaubt!", Toast.LENGTH_SHORT).show();
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        } else {
+            Log.d("DEBUG", "not granted");
+            finish();
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -55,23 +77,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("DEBUG", "map ready");
         mMap = googleMap;
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = getBestLocation();
+        if(location != null)
+        {
 
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("You were here!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(currentLocation).title("You were here!"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+        }
+
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 
@@ -90,12 +106,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                    marker.remove();
                }
                showDialog(latLng, address);
-               MarkerOptions options = new MarkerOptions()
-                       .title(address.getAddressLine(0))
-                       .position(new LatLng(latLng.latitude,
-                               latLng.longitude));
-
-               marker = mMap.addMarker(options);
            }
        });
     }
@@ -105,7 +115,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         String message = "";
         if(address.getPostalCode() != null) message = address.getPostalCode() + " ";
-        if(address.getLocality() != null) message += address.getLocality();
+        if(address.getLocality() != null) message += address.getLocality() + " \r\n";
+        if(address.getAddressLine(0) != null) message += address.getAddressLine(0);
         message += "\r\n" + latLng.latitude + ", " + latLng.longitude;
 
         dialog.setTitle("Diesen Standort hinzufügen?");
@@ -116,7 +127,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Bundle extras = getIntent().getExtras();
                 String location = "";
                 if(address.getPostalCode() != null) location += address.getPostalCode(); location += " ";
-                if(address.getLocality() != null) location += address.getLocality();
+                if(address.getLocality() != null) location += address.getLocality(); location += " ";
+                if(address.getAddressLine(0) != null) location += address.getAddressLine(0);
                 eDB.addLocationToEntry(extras.getLong("list"), extras.getString("description"), location, latLng.latitude, latLng.longitude);
                 finish();
 
@@ -130,5 +142,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         dialog.show();
+    }
+
+
+
+    private Location getBestLocation()
+    {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Location bestResult = null;
+        float bestAccuracy = Float.MAX_VALUE;
+        long bestAge = Long.MIN_VALUE;
+        List<String> matchingProviders = lm.getAllProviders();
+        Location location = null;
+
+        for (String provider : matchingProviders) {
+
+            try {
+                location = lm.getLastKnownLocation(provider);
+            }
+            catch (SecurityException se)
+            {
+                se.printStackTrace();
+            }
+
+            if (location != null) {
+
+                float accuracy = location.getAccuracy();
+                long time = location.getTime();
+
+                if (accuracy < bestAccuracy) {
+
+                    bestResult = location;
+                    bestAccuracy = accuracy;
+                    bestAge = time;
+
+                }
+            }
+        }
+            return bestResult;
+    }
+
+    private void askForPermission()
+    {
+        Log.d("DEBUG", "In askforpermission");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.d("DEBUG", "hat sie noch nicht");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+        }else{
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
     }
 }
