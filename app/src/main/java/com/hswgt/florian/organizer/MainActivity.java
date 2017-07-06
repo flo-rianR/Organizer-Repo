@@ -52,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
     {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        Drawable drawable = menu.findItem(R.id.addListButton).getIcon();
-        if(drawable != null)
-        {
-            drawable.mutate();
-            drawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
-        }
         return true;
     }
 
@@ -70,15 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 final Intent i = new Intent(this, AndroidDatabaseManager.class);
                 startActivity(i);
                 return true;
-            case R.id.addListButton:
-                addListDialog();
-                return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addListDialog()
+    public void addListDialog(View view)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -135,4 +126,5 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("list", listModels.get(position).getId());
         startActivity(i);
     }
+
 }

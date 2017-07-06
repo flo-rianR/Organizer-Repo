@@ -69,12 +69,6 @@ public class listActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_list, menu);
-
-        Drawable drawable = menu.findItem(R.id.addEntryButton).getIcon();
-        if (drawable != null) {
-            drawable.mutate();
-            drawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
-        }
         return true;
     }
 
@@ -84,15 +78,12 @@ public class listActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
-            case R.id.addEntryButton:
-                addListDialog();
-                return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addListDialog()
+    private void addListDialog(View view)
     {
         final Entry entry = new Entry();
 

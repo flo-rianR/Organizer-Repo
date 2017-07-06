@@ -4,10 +4,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item
-        android:id="@+id/addEntryButton"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="Add_Button"
-        app:showAsAction="ifRoom" />
 
 </menu>
