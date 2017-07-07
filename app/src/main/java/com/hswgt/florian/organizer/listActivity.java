@@ -159,5 +159,15 @@ public class listActivity extends AppCompatActivity {
     {
         //TODO Testbutton um Image hinzuzufügen add function here
         Toast.makeText(this, "Funktion hinzufügen", Toast.LENGTH_LONG).show();
+        showentry();
     }
+
+    public void showentry ( )
+    {
+        final Intent ientry = new Intent(this, EntryDetailActivity.class);
+        //i.putExtra("list", listModels.get(position).getId());
+        //Log.d("debug id", String.valueOf(listModels.get(position).getId()));
+        startActivity(ientry);
+    }
+
 }
