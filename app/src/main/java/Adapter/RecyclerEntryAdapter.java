@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -31,12 +32,14 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     {
         public TextView descriptionText;
         public ImageButton deleteButton;
+        public Button tmpbutton;
 
         public MyViewHolder(View view)
         {
             super(view);
             descriptionText = (TextView) view.findViewById(R.id.descriptionTextView);
             deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
+            tmpbutton = (Button) view.findViewById(R.id.tmpButton);
         }
     }
 

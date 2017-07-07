@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -153,4 +154,10 @@ public class listActivity extends AppCompatActivity {
         recyclerAdapter.notifyDataSetChanged();
     }
 
+
+    public void addImage(View view)
+    {
+        //TODO Testbutton um Image hinzuzufügen add function here
+        Toast.makeText(this, "Funktion hinzufügen", Toast.LENGTH_LONG).show();
+    }
 }
