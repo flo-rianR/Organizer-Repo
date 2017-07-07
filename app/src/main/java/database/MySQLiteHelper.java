@@ -7,6 +7,7 @@ import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         protected static final String KEY_DESCRIPTION = "description";
         protected static final String KEY_CREATEDATE = "create_At";
         protected static final String KEY_DATE = "date";
+        ////////////////////////////////////////////////////////////////////////////////////
+        protected static final String KEY_IMAGE = "entryimage";
+        ////////////////////////////////////////////////////////////////////////////////////
         protected static final String KEY_LOCATION = "location";
         protected static final String KEY_LATITUTE = "latitute";
         protected static final String KEY_LONGITUTE = "longitute";
@@ -71,6 +75,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 ENTRY_TABLE.KEY_DESCRIPTION + " TEXT, " +
                 ENTRY_TABLE.KEY_CREATEDATE + " TEXT, " +
                 ENTRY_TABLE.KEY_DATE + " TEXT, " +
+                ////////////////////////////////////////////////////////////////////////////////////
+                ENTRY_TABLE.KEY_IMAGE + " BYTE[], " +
+                ////////////////////////////////////////////////////////////////////////////////////
                 ENTRY_TABLE.KEY_LOCATION + " TEXT, " +
                 ENTRY_TABLE.KEY_LATITUTE + " REAL, " +
                 ENTRY_TABLE.KEY_LONGITUTE + " REAL, " +
@@ -122,6 +129,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         db.execSQL(query);
         db.close();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+    public void insertImagetoEntry(long id, byte[] entryimage) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String imagequery = "UPDATE" + TABLE_ENTRY + "SET " + ENTRY_TABLE.KEY_IMAGE + "='" + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";;
+        SQLiteStatement statement = db.compileStatement(imagequery);
+        statement.clearBindings();
+
+        statement.bindBlob(3, entryimage);
+
+
+    }
+*/
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void addList(ListModel listModel)
     {
