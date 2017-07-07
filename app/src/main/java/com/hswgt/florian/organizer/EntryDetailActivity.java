@@ -58,7 +58,7 @@ public class EntryDetailActivity extends AppCompatActivity {
                 this.finish();
                 return true;
 
-        }
+        }//excelsior
         return super.onOptionsItemSelected(item);
     }
 
