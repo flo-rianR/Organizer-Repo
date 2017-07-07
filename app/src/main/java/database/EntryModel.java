@@ -4,9 +4,10 @@ package database;
  * Created by Florian on 10.06.2017.
  */
 
-public class Entry
+public class EntryModel
 {
     private int id;
+    private String name;
     private String description;
     private String created_At;
     private String date;
@@ -15,9 +16,9 @@ public class Entry
     private double longitute;
     private int foreign_key;
 
-    public Entry(){}
+    public EntryModel(){}
 
-    public Entry( String list, String description, String created_At, String location, int latitute, int longitute)
+    public EntryModel(String list, String description, String created_At, String location, int latitute, int longitute)
     {
         this.description = description;
         this.created_At = created_At;
@@ -28,6 +29,8 @@ public class Entry
 
     public int getID() {return id;}
     public void setID(int id) {this.id = id;}
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
     public String getDescription() {return description;}
     public void setDescription(String description) {this.description = description;}
     public String getCreated_At() {return created_At;}

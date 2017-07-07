@@ -129,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(address.getPostalCode() != null) location += address.getPostalCode(); location += " ";
                 if(address.getLocality() != null) location += address.getLocality(); location += " ";
                 if(address.getAddressLine(0) != null) location += address.getAddressLine(0);
-                eDB.addLocationToEntry(extras.getLong("list"), extras.getString("description"), location, latLng.latitude, latLng.longitude);
+                eDB.addLocationToEntry(extras.getLong("list"), location, latLng.latitude, latLng.longitude);
                 finish();
 
             }

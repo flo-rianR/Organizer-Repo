@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -15,7 +14,7 @@ import com.hswgt.florian.organizer.R;
 
 import java.util.List;
 
-import database.Entry;
+import database.EntryModel;
 import database.MySQLiteHelper;
 
 /**
@@ -24,12 +23,11 @@ import database.MySQLiteHelper;
 
 public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdapter.MyViewHolder> implements View.OnClickListener
 {
-    private List<Entry> entries;
+    private List<EntryModel> entries;
     private MySQLiteHelper eDB;
 
 
-
-    public class MyViewHolder extends RecyclerView.ViewHolder
+    class MyViewHolder extends RecyclerView.ViewHolder
     {
         public TextView descriptionText;
         public ImageButton deleteButton;
@@ -42,7 +40,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
         }
     }
 
-    public RecyclerEntryAdapter(List<Entry> entries, MySQLiteHelper eDB)
+    public RecyclerEntryAdapter(List<EntryModel> entries, MySQLiteHelper eDB)
     {
         this.entries = entries;
         this.eDB = eDB;
@@ -61,10 +59,10 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        final Entry entry = entries.get(position);
-        //if(entry.getDescription() == null || entry.getCreated_At() == null) return;
-            holder.descriptionText.setText(entry.getDescription());
-            Log.d("Debug", entry.getDescription());
+        final EntryModel entryModel = entries.get(position);
+        //if(entryModel.getDescription() == null || entryModel.getCreated_At() == null) return;
+            holder.descriptionText.setText(entryModel.getDescription());
+            Log.d("Debug", entryModel.getDescription());
 
 
     }

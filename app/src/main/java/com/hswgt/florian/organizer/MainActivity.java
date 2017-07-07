@@ -1,44 +1,41 @@
 package com.hswgt.florian.organizer;
 
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import database.Entry;
+import Adapter.RecyclerListAdapter;
+import Listener.RecyclerItemClickListener;
 import database.ListModel;
 import database.MySQLiteHelper;
-
-import static android.R.attr.name;
-import static android.R.attr.start;
-import static android.R.id.input;
-import static android.R.id.list;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private MySQLiteHelper eDB;
-    ArrayAdapter<String> adapter;
+    //ArrayAdapter<String> adapter;
+    private RecyclerListAdapter recyclerListAdapter;
     List<ListModel> listModels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public void addListDialog(View view)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater linf = LayoutInflater.from(this);
         final View inflater = linf.inflate(R.layout.dialog_addlist, null);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        final ListModel listModel = new ListModel();
 
         final EditText input = (EditText) inflater.findViewById(R.id.addListEdittext);
 
@@ -85,10 +84,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String nameString = input.getText().toString();
-                eDB.addList(nameString);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                String date = sdf.format(new Date());
+                listModel.setList(nameString);
+                listModel.setCreate_At(date);
+                eDB.addList(listModel);
+                listModels.add(listModel);
                 listModels = eDB.getAllLists();
-                adapter.add(nameString);
-                adapter.notifyDataSetChanged();
+                recyclerListAdapter.notifyDataSetChanged();
             }
         });
         builder.create().show();
@@ -108,23 +111,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void listViewInit()
     {
-        ListView listView = (ListView) findViewById(R.id.listview);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listToString());
-        listView.setAdapter(adapter);
+        recyclerListAdapter = new RecyclerListAdapter(listModels, eDB);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listrecycler);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                show(position);
-            }
-        });
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerListAdapter);
+        recyclerListAdapter.notifyDataSetChanged();
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d("DEBUG", String.valueOf(position));
+                        show(position);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
+      //  recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+      //  {
+      //      @Override
+      //      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      //          show(position);
+      //      }
+      // });
     }
 
     public void show (int position)
     {
         final Intent i = new Intent(this, listActivity.class);
         i.putExtra("list", listModels.get(position).getId());
+        Log.d("debug id", String.valueOf(listModels.get(position).getId()));
         startActivity(i);
     }
 

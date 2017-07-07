@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static android.R.attr.id;
-import static database.MySQLiteHelper.ENTRY_TABLE.KEY_DESCRIPTION;
+import static android.R.id.list;
 
 
 /**
@@ -28,11 +27,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     {
         protected static final String KEY_ID = "id";
         protected static final String KEY_LIST = "list";
+        protected static final String KEY_DATE = "create_At";
     }
 
     class ENTRY_TABLE
     {
         protected static final String KEY_ID = "id";
+        protected static final String KEY_NAME = "name";
         protected static final String KEY_DESCRIPTION = "description";
         protected static final String KEY_CREATEDATE = "create_At";
         protected static final String KEY_DATE = "date";
@@ -59,13 +60,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         String CREATE_LIST_TABLE = "CREATE TABLE " + TABLE_LIST +
                 " ( " +
                 LIST_TABLE.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                LIST_TABLE.KEY_LIST + " TEXT NOT NULL);";
+                LIST_TABLE.KEY_LIST + " TEXT NOT NULL, " +
+                LIST_TABLE.KEY_DATE + " TEXT);";
 
 
         String CREATE_ENTRY_TABLE = "CREATE TABLE " + TABLE_ENTRY +
                 " ( " +
                 ENTRY_TABLE.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                KEY_DESCRIPTION + " TEXT, " +
+                ENTRY_TABLE.KEY_NAME + " TEXT NOT NULL, " +
+                ENTRY_TABLE.KEY_DESCRIPTION + " TEXT, " +
                 ENTRY_TABLE.KEY_CREATEDATE + " TEXT, " +
                 ENTRY_TABLE.KEY_DATE + " TEXT, " +
                 ENTRY_TABLE.KEY_LOCATION + " TEXT, " +
@@ -87,18 +90,20 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         this.onCreate(db);
     }
 
-    public long addEntry(Entry entry)
+    public long addEntry(EntryModel entryModel)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ENTRY_TABLE.KEY_DESCRIPTION, entry.getDescription());
-        values.put(ENTRY_TABLE.KEY_CREATEDATE, entry.getCreated_At());
-        values.put(ENTRY_TABLE.KEY_DATE, entry.getDate());
-        values.put(ENTRY_TABLE.KEY_FOREIGN, entry.getForeign_key());
-        //values.put(KEY_LOCATION, entry.getLocation());
-        //values.put(KEY_LATITUTE, entry.getLatitute());
-        //values.put(KEY_LONGITUTE, entry.getLongitute());
+        values.put(ENTRY_TABLE.KEY_NAME, entryModel.getName());
+        values.put(ENTRY_TABLE.KEY_NAME, "tmpName");
+        values.put(ENTRY_TABLE.KEY_DESCRIPTION, entryModel.getDescription());
+        values.put(ENTRY_TABLE.KEY_CREATEDATE, entryModel.getCreated_At());
+        values.put(ENTRY_TABLE.KEY_DATE, entryModel.getDate());
+        values.put(ENTRY_TABLE.KEY_FOREIGN, entryModel.getForeign_key());
+        //values.put(KEY_LOCATION, entryModel.getLocation());
+        //values.put(KEY_LATITUTE, entryModel.getLatitute());
+        //values.put(KEY_LONGITUTE, entryModel.getLongitute());
         long id = db.insert(TABLE_ENTRY,
                 null,
                 values);
@@ -106,7 +111,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         return id;
     }
 
-    public void addLocationToEntry(long id, String description, String location, double latitute, double longitute)
+    public void addLocationToEntry(long id, String location, double latitute, double longitute)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_LOCATION + "='" + location + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";// AND " + KEY_DESCRIPTION + "='" + description + "'";
@@ -118,12 +123,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         db.close();
     }
 
-    public void addList(String list)
+    public void addList(ListModel listModel)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(LIST_TABLE.KEY_LIST, list);
+        values.put(LIST_TABLE.KEY_LIST, listModel.getList());
+        values.put(LIST_TABLE.KEY_DATE, listModel.getCreate_At());
         db.insert(TABLE_LIST,
                 null,
                 values);
@@ -132,27 +138,28 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
 
 
-    public List<Entry> getListEntries(int id)
+    public List<EntryModel> getListEntries(int id)
     {
-        List<Entry> entries  = new LinkedList<>();
-        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + ENTRY_TABLE.KEY_FOREIGN + " = " + "'" + id + "'"; // AND NOT (" + KEY_DESCRIPTION +" IS NULL OR "+ KEY_CREATEDATE + " IS NULL)";
+        List<EntryModel> entries  = new LinkedList<>();
+        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + ENTRY_TABLE.KEY_FOREIGN + " = " + "'" + id + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        Entry entry;
+        EntryModel entryModel;
         if(cursor.moveToFirst())
         {
             do{
-                entry = new Entry();
-                entry.setID(Integer.parseInt(cursor.getString(0)));
-                entry.setDescription(cursor.getString(1));
-                entry.setCreated_At(cursor.getString(2));
-                entry.setDate(cursor.getString(3));
-                entry.setLocation(cursor.getString(4));
-                entry.setLatitute(cursor.getDouble(5));
-                entry.setLongitute(cursor.getDouble(6));
-                entry.setForeign_key(cursor.getInt(7));
+                entryModel = new EntryModel();
+                entryModel.setID(Integer.parseInt(cursor.getString(0)));
+                entryModel.setName(cursor.getString(1));
+                entryModel.setDescription(cursor.getString(2));
+                entryModel.setCreated_At(cursor.getString(3));
+                entryModel.setDate(cursor.getString(4));
+                entryModel.setLocation(cursor.getString(5));
+                entryModel.setLatitute(cursor.getDouble(6));
+                entryModel.setLongitute(cursor.getDouble(7));
+                entryModel.setForeign_key(cursor.getInt(8));
 
-                entries.add(entry);
+                entries.add(entryModel);
             } while(cursor.moveToNext());
         }
         return entries;
@@ -164,11 +171,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         String query = "SELECT * FROM " + TABLE_LIST;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        ListModel list = new ListModel();
         if(cursor.moveToFirst()) {
             do {
+                ListModel list = new ListModel();
                 list.setId(cursor.getInt(0));
                 list.setList(cursor.getString(1));
+                list.setCreate_At(cursor.getString(2));
+
                 lists.add(list);
             } while (cursor.moveToNext());
         }
@@ -176,12 +185,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         return lists;
     }
 
-    public void deleteEntry(Entry entry)
+    public void deleteEntry(EntryModel entryModel)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ENTRY,
                 ENTRY_TABLE.KEY_ID + " = ?",
-                new String[]{String.valueOf(entry.getID())});
+                new String[]{String.valueOf(entryModel.getID())});
 
         db.close();
     }
