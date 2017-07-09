@@ -27,7 +27,7 @@ import database.MySQLiteHelper;
 
 public class EntryDetailActivity extends AppCompatActivity {
 
-    EditText edtName, edtPrice;
+    EditText edtName, edtDescription;
     Button btnChange, btnUpdate ;
     ImageView entryimage;
 
