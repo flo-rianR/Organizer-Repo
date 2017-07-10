@@ -3,6 +3,7 @@ package com.hswgt.florian.organizer;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -126,10 +127,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(DialogInterface dialog, int which) {
                 Bundle extras = getIntent().getExtras();
                 String location = "";
+                String street = "";
                 if(address.getPostalCode() != null) location += address.getPostalCode(); location += " ";
                 if(address.getLocality() != null) location += address.getLocality(); location += " ";
-                if(address.getAddressLine(0) != null) location += address.getAddressLine(0);
-                eDB.addLocationToEntry(extras.getLong("list"), location, latLng.latitude, latLng.longitude);
+                if(address.getAddressLine(0) != null) street += address.getAddressLine(0);
+//                eDB.addLocationToEntry(extras.getLong("list"), location, street, latLng.latitude, latLng.longitude);
+                Intent data = new Intent();
+                data.putExtra("locationkey", location);
+                data.putExtra("streetkey", street);
+                data.putExtra("latkey", latLng.latitude);
+                data.putExtra("longkey", latLng.longitude);
+                setResult(RESULT_OK, data);
                 finish();
 
             }

@@ -12,6 +12,7 @@ public class EntryModel
     private String created_At;
     private String date;
     private String location;
+    private String street;
     private double latitute;
     private double longitute;
     private int foreign_key;
@@ -39,6 +40,8 @@ public class EntryModel
     public void setDate(String date){this.date = date;}
     public String getLocation() {return location;}
     public void setLocation(String location) {this.location = location;}
+    public String getStreet() {return street;}
+    public void setStreet(String street) {this.street = street;}
     public void setLatitute(double latitute) {this.latitute = latitute;}
     public double getLatitute() {return latitute;}
     public void setLongitute(double longitute) {this.longitute = longitute;}

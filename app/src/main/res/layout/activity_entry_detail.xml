@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+
+
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -57,48 +59,61 @@
 
     <ImageButton
         android:id="@+id/addLocationIBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:background="@color/colorAccent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@null"
+        android:tint="@color/colorAccent"
         android:onClick="addLocation"
         app:srcCompat="@android:drawable/ic_menu_mylocation"
-        android:layout_above="@+id/LocationeditText"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/edtDescription"
         android:layout_alignParentStart="true" />
 
     <ImageButton
         android:id="@+id/addDateIBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/addLocationIBtn"
-        android:layout_toEndOf="@+id/entryimage"
-        android:background="@color/colorAccent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@null"
+        android:tint="@color/colorAccent"
         android:onClick="addDate"
-        app:srcCompat="@android:drawable/ic_menu_today" />
+        app:srcCompat="@android:drawable/ic_menu_today"
+        android:layout_below="@+id/addLocationIBtn"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="33dp" />
 
     <TextView
-        android:id="@+id/LocationeditText"
+        android:id="@+id/LocationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="130dp"
-        android:layout_toStartOf="@+id/addDateIBtn"
         android:ems="10"
         android:inputType="none"
         android:text="Ort"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginStart="27dp"
+        android:layout_below="@+id/StreetText"
+        android:layout_alignStart="@+id/entryimage" />
+
+    <TextView
+        android:id="@+id/StreetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="none"
+        android:text="Straße"
+        android:textSize="18sp"
+        android:layout_alignTop="@+id/addLocationIBtn"
+        android:layout_alignStart="@+id/LocationText" />
 
     <TextView
         android:id="@+id/DateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/LocationeditText"
-        android:layout_alignBottom="@+id/LocationeditText"
-        android:layout_toEndOf="@+id/LocationeditText"
         android:ems="10"
         android:inputType="date"
-        android:textSize="18sp" />
+        android:text="Datum"
+        android:textSize="18sp"
+        android:layout_alignTop="@+id/addDateIBtn"
+        android:layout_alignStart="@+id/LocationText" />
 
 
 </RelativeLayout>

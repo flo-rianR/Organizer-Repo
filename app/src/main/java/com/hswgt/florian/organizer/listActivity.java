@@ -19,10 +19,13 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import Adapter.RecyclerEntryAdapter;
 import database.EntryModel;
 import database.MySQLiteHelper;
+
+import static android.R.id.list;
 
 
 /**
@@ -35,6 +38,7 @@ public class listActivity extends AppCompatActivity {
     LinkedList<EntryModel> entryModelList = null;
     private String description;
     private long id;
+    int list;
 
 
     @Override
@@ -66,44 +70,43 @@ public class listActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    public void addEntryDialog(View view)
-//    {
-//        final EntryModel entryModel = new EntryModel();
-//
-//        LayoutInflater linf = LayoutInflater.from(this);
-//        final View inflater = linf.inflate(R.layout.dialog_addentry, null);
-//        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-//
-//        dialog.setTitle("Neuen Eintrag erstellen");
-//        dialog.setView(inflater);
-//
-//        final EditText descriptionEditText = (EditText) inflater.findViewById(R.id.descriptionEditText);
-//
-//        dialog.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                description = descriptionEditText.getText().toString();
-//                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-//                String date = sdf.format(new Date());
-//                entryModel.setDescription(description);
-//                entryModel.setForeign_key(getIntent().getIntExtra("list", -1));
-//                entryModel.setCreated_At(date);
-//                id = eDB.addEntry(entryModel);
-//                entryModelList.add(entryModel);
-//                recyclerAdapter.notifyDataSetChanged();
-//                dialog.cancel();
-//                addLocationDialog();
-//            }
-//        });
-//        dialog.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-//
-//        dialog.show();
-//    }
+    public void addEntry(View view)
+    {
+        final EntryModel entryModel = new EntryModel();
+
+        LayoutInflater linf = LayoutInflater.from(this);
+        final View inflater = linf.inflate(R.layout.dialog_addentry, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Neuen Eintrag erstellen");
+        dialog.setView(inflater);
+
+        final EditText descriptionEditText = (EditText) inflater.findViewById(R.id.descriptionEditText);
+
+        dialog.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                description = descriptionEditText.getText().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                String date = sdf.format(new Date());
+                entryModel.setDescription(description);
+                entryModel.setForeign_key(getIntent().getIntExtra("list", -1));
+                entryModel.setCreated_At(date);
+                id = eDB.addEntry(entryModel);
+//                updateRecycler();
+                dialog.cancel();
+                addLocationDialog();
+            }
+        });
+        dialog.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
 
     public void addLocationDialog()
     {
@@ -135,7 +138,7 @@ public class listActivity extends AppCompatActivity {
 
     private void listInit() {
         Intent i = getIntent();
-        int list = i.getIntExtra("list", -1);
+        list = i.getIntExtra("list", -1);
         Log.d("deBug", String.valueOf(list));
         entryModelList = (LinkedList<EntryModel>) eDB.getListEntries(list);
         Log.d("debug size", String.valueOf(entryModelList.size()));
@@ -156,6 +159,7 @@ public class listActivity extends AppCompatActivity {
 
     public void addEntryDialog(View view)
     {
+//        addEntry(view);
         showentry();
     }
 
@@ -166,12 +170,33 @@ public class listActivity extends AppCompatActivity {
 //        showentry();
     }
 
-    public void showentry ( )
+    public void showentry ()
     {
-        final Intent ientry = new Intent(this, EntryDetailActivity.class);
-        //i.putExtra("list", listModels.get(position).getId());
-        //Log.d("debug id", String.valueOf(listModels.get(position).getId()));
-        startActivity(ientry);
+        int requestCode = 2;
+        Intent ientry = new Intent(listActivity.this, EntryDetailActivity.class);
+        ientry.putExtra("list", getIntent().getIntExtra("list", -1));
+        Log.d("debug id", String.valueOf(getIntent().getIntExtra("list", -1)));
+        startActivityForResult(ientry, requestCode);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("debug back", "vvor if");
+        if(requestCode == 2)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                Log.d("debug back", "back in lsit");
+                LinkedList<EntryModel> swaplist = (LinkedList<EntryModel>)eDB.getListEntries(list);
+                recyclerAdapter.swap(swaplist);
+            }
+        }
+    }
+
+    private void updateRecycler()
+    {
+//        entryModelList.clear();
+        entryModelList = (LinkedList<EntryModel>) eDB.getListEntries(list);
+        recyclerAdapter.notifyDataSetChanged();
+    }
 }

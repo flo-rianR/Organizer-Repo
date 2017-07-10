@@ -15,6 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static android.R.id.list;
+import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LATITUTE;
+import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LOCATION;
+import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LONGITUTE;
 
 
 /**
@@ -42,6 +45,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         protected static final String KEY_IMAGE = "entryimage";
         ////////////////////////////////////////////////////////////////////////////////////
         protected static final String KEY_LOCATION = "location";
+        protected static final String KEY_STREET = "street";
         protected static final String KEY_LATITUTE = "latitute";
         protected static final String KEY_LONGITUTE = "longitute";
         protected static final String KEY_FOREIGN = "fk_list";
@@ -78,9 +82,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 ////////////////////////////////////////////////////////////////////////////////////
                 ENTRY_TABLE.KEY_IMAGE + " BYTE[], " +
                 ////////////////////////////////////////////////////////////////////////////////////
-                ENTRY_TABLE.KEY_LOCATION + " TEXT, " +
-                ENTRY_TABLE.KEY_LATITUTE + " REAL, " +
-                ENTRY_TABLE.KEY_LONGITUTE + " REAL, " +
+                KEY_LOCATION + " TEXT, " +
+                ENTRY_TABLE.KEY_STREET + " TEXT, " +
+                KEY_LATITUTE + " REAL, " +
+                KEY_LONGITUTE + " REAL, " +
                 ENTRY_TABLE.KEY_FOREIGN + " INTEGER, " +
                 "FOREIGN KEY (" + ENTRY_TABLE.KEY_FOREIGN + ") REFERENCES " + TABLE_LIST + "(" + LIST_TABLE.KEY_ID + "));";
 
@@ -103,14 +108,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
         ContentValues values = new ContentValues();
         values.put(ENTRY_TABLE.KEY_NAME, entryModel.getName());
-        values.put(ENTRY_TABLE.KEY_NAME, "tmpName");
         values.put(ENTRY_TABLE.KEY_DESCRIPTION, entryModel.getDescription());
         values.put(ENTRY_TABLE.KEY_CREATEDATE, entryModel.getCreated_At());
         values.put(ENTRY_TABLE.KEY_DATE, entryModel.getDate());
         values.put(ENTRY_TABLE.KEY_FOREIGN, entryModel.getForeign_key());
-        //values.put(KEY_LOCATION, entryModel.getLocation());
-        //values.put(KEY_LATITUTE, entryModel.getLatitute());
-        //values.put(KEY_LONGITUTE, entryModel.getLongitute());
+        values.put(ENTRY_TABLE.KEY_LOCATION, entryModel.getLocation());
+        values.put(ENTRY_TABLE.KEY_LATITUTE, entryModel.getLatitute());
+        values.put(ENTRY_TABLE.KEY_LONGITUTE, entryModel.getLongitute());
+        values.put(ENTRY_TABLE.KEY_STREET, entryModel.getStreet());
         long id = db.insert(TABLE_ENTRY,
                 null,
                 values);
@@ -118,14 +123,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         return id;
     }
 
-    public void addLocationToEntry(long id, String location, double latitute, double longitute)
+    public void addLocationToEntry(long id, String location, String street, double latitute, double longitute)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_LOCATION + "='" + location + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";// AND " + KEY_DESCRIPTION + "='" + description + "'";
+        String query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LOCATION + "='" + location + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
         db.execSQL(query);
-        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_LATITUTE + "='" + latitute + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'"; //AND " + KEY_DESCRIPTION + "='" + description + "'";
+        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_STREET + "='" + street + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
         db.execSQL(query);
-        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_LONGITUTE + "='" + longitute + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";// AND " + KEY_DESCRIPTION + "='" + description + "'";
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LATITUTE + "='" + latitute + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LONGITUTE + "='" + longitute + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
         db.execSQL(query);
         db.close();
     }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.hswgt.florian.organizer.R;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import database.EntryModel;
@@ -97,5 +98,12 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
                 }).create().show();
 
 
+    }
+
+    public void swap(LinkedList<EntryModel> datas)
+    {
+        entries.clear();
+        entries.addAll(datas);
+        notifyDataSetChanged();
     }
 }
