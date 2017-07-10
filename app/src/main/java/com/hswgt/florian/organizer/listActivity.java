@@ -66,44 +66,44 @@ public class listActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addEntryDialog(View view)
-    {
-        final EntryModel entryModel = new EntryModel();
-
-        LayoutInflater linf = LayoutInflater.from(this);
-        final View inflater = linf.inflate(R.layout.dialog_addentry, null);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-        dialog.setTitle("Neuen Eintrag erstellen");
-        dialog.setView(inflater);
-
-        final EditText descriptionEditText = (EditText) inflater.findViewById(R.id.descriptionEditText);
-
-        dialog.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                description = descriptionEditText.getText().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                String date = sdf.format(new Date());
-                entryModel.setDescription(description);
-                entryModel.setForeign_key(getIntent().getIntExtra("list", -1));
-                entryModel.setCreated_At(date);
-                id = eDB.addEntry(entryModel);
-                entryModelList.add(entryModel);
-                recyclerAdapter.notifyDataSetChanged();
-                dialog.cancel();
-                addLocationDialog();
-            }
-        });
-        dialog.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
-    }
+//    public void addEntryDialog(View view)
+//    {
+//        final EntryModel entryModel = new EntryModel();
+//
+//        LayoutInflater linf = LayoutInflater.from(this);
+//        final View inflater = linf.inflate(R.layout.dialog_addentry, null);
+//        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//
+//        dialog.setTitle("Neuen Eintrag erstellen");
+//        dialog.setView(inflater);
+//
+//        final EditText descriptionEditText = (EditText) inflater.findViewById(R.id.descriptionEditText);
+//
+//        dialog.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                description = descriptionEditText.getText().toString();
+//                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+//                String date = sdf.format(new Date());
+//                entryModel.setDescription(description);
+//                entryModel.setForeign_key(getIntent().getIntExtra("list", -1));
+//                entryModel.setCreated_At(date);
+//                id = eDB.addEntry(entryModel);
+//                entryModelList.add(entryModel);
+//                recyclerAdapter.notifyDataSetChanged();
+//                dialog.cancel();
+//                addLocationDialog();
+//            }
+//        });
+//        dialog.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        dialog.show();
+//    }
 
     public void addLocationDialog()
     {
@@ -154,12 +154,16 @@ public class listActivity extends AppCompatActivity {
         recyclerAdapter.notifyDataSetChanged();
     }
 
+    public void addEntryDialog(View view)
+    {
+        showentry();
+    }
 
     public void addImage(View view)
     {
         //TODO Testbutton um Image hinzuzufügen add function here
         Toast.makeText(this, "Funktion hinzufügen", Toast.LENGTH_LONG).show();
-        showentry();
+//        showentry();
     }
 
     public void showentry ( )

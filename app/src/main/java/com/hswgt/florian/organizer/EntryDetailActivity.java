@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -47,7 +50,10 @@ public class EntryDetailActivity extends AppCompatActivity {
 
     }
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+        getMenuInflater().inflate(R.menu.menu_entrydetail, menu);
+        setColorWhite(menu.findItem(R.id.save).getIcon());
+        setColorWhite(menu.findItem(R.id.cancel).getIcon());
+
         return true;
     }
 
@@ -60,6 +66,15 @@ public class EntryDetailActivity extends AppCompatActivity {
 
         }//excelsior
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setColorWhite (Drawable drawableSave)
+    {
+        if(drawableSave != null)
+        {
+            drawableSave.mutate();
+            drawableSave.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
 }

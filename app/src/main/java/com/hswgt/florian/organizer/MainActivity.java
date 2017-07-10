@@ -90,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 listModel.setCreate_At(date);
                 eDB.addList(listModel);
                 listModels.add(listModel);
-                listModels = eDB.getAllLists();
+//                listModels = eDB.getAllLists();
                 recyclerListAdapter.notifyDataSetChanged();
+                recyclerListAdapter.notifyItemRangeChanged(0, listModels.size());
             }
         });
         builder.create().show();

@@ -165,7 +165,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     {
         List<EntryModel> entries  = new LinkedList<>();
         String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " + ENTRY_TABLE.KEY_FOREIGN + " = " + "'" + id + "'";
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         EntryModel entryModel;
         if(cursor.moveToFirst())
@@ -185,6 +185,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 entries.add(entryModel);
             } while(cursor.moveToNext());
         }
+        db.close();
         return entries;
     }
 
