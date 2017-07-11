@@ -61,7 +61,6 @@
         android:id="@+id/addLocationIBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@null"
         android:tint="@color/colorAccent"
         android:onClick="addLocation"
         app:srcCompat="@android:drawable/ic_menu_mylocation"
@@ -73,7 +72,6 @@
         android:id="@+id/addDateIBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@null"
         android:tint="@color/colorAccent"
         android:onClick="addDate"
         app:srcCompat="@android:drawable/ic_menu_today"
@@ -89,9 +87,9 @@
         android:inputType="none"
         android:text="Ort"
         android:textSize="18sp"
-        android:layout_marginStart="27dp"
-        android:layout_below="@+id/StreetText"
-        android:layout_alignStart="@+id/entryimage" />
+        android:layout_marginStart="50dp"
+        android:layout_alignTop="@+id/addLocationIBtn"
+        android:layout_alignLeft="@+id/addLocationIBtn" />
 
     <TextView
         android:id="@+id/StreetText"
@@ -101,7 +99,7 @@
         android:inputType="none"
         android:text="Straße"
         android:textSize="18sp"
-        android:layout_alignTop="@+id/addLocationIBtn"
+        android:layout_below="@+id/LocationText"
         android:layout_alignStart="@+id/LocationText" />
 
     <TextView

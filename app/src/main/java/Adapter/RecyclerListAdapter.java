@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hswgt.florian.organizer.R;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import database.EntryModel;
@@ -69,5 +70,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         return lists.size();
     }
 
+    public void swap(LinkedList<ListModel> datas)
+    {
+        lists.clear();
+        lists.addAll(datas);
+        notifyDataSetChanged();
+    }
 
 }

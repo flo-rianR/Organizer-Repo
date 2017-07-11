@@ -23,10 +23,12 @@ import android.widget.ListView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import Adapter.RecyclerListAdapter;
 import Listener.RecyclerItemClickListener;
+import database.EntryModel;
 import database.ListModel;
 import database.MySQLiteHelper;
 
@@ -66,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateRecycler();
+    }
 
     public void addListDialog(View view)
     {
@@ -89,10 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 listModel.setList(nameString);
                 listModel.setCreate_At(date);
                 eDB.addList(listModel);
-                listModels.add(listModel);
-//                listModels = eDB.getAllLists();
-                recyclerListAdapter.notifyDataSetChanged();
-                recyclerListAdapter.notifyItemRangeChanged(0, listModels.size());
+                updateRecycler();
             }
         });
         builder.create().show();
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerListAdapter);
-        recyclerListAdapter.notifyDataSetChanged();
+        updateRecycler();
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -148,6 +152,12 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("list", listModels.get(position).getId());
         Log.d("debug id", String.valueOf(listModels.get(position).getId()));
         startActivity(i);
+    }
+
+    private void updateRecycler()
+    {
+        LinkedList<ListModel> swaplist = (LinkedList<ListModel>) eDB.getAllLists();
+        recyclerListAdapter.swap(swaplist);
     }
 
 }

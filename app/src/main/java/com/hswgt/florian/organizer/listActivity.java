@@ -187,16 +187,13 @@ public class listActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK)
             {
                 Log.d("debug back", "back in lsit");
-                LinkedList<EntryModel> swaplist = (LinkedList<EntryModel>)eDB.getListEntries(list);
-                recyclerAdapter.swap(swaplist);
+                updateRecycler();
             }
         }
     }
-
     private void updateRecycler()
     {
-//        entryModelList.clear();
-        entryModelList = (LinkedList<EntryModel>) eDB.getListEntries(list);
-        recyclerAdapter.notifyDataSetChanged();
+        LinkedList<EntryModel> swaplist = (LinkedList<EntryModel>)eDB.getListEntries(list);
+        recyclerAdapter.swap(swaplist);
     }
 }

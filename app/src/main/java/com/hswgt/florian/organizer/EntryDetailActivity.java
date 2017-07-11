@@ -2,6 +2,7 @@ package com.hswgt.florian.organizer;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.DropBoxManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,8 +85,6 @@ public class EntryDetailActivity extends AppCompatActivity {
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_entrydetail, menu);
-        setColorWhite(menu.findItem(R.id.save).getIcon());
-        setColorWhite(menu.findItem(R.id.cancel).getIcon());
 
         return true;
     }
@@ -93,28 +93,15 @@ public class EntryDetailActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                notSaveDialog();
                 return true;
             case R.id.save:
                 saveEntry();
                 break;
-            case R.id.cancel:
-                this.finish();
-                return true;
-
-
         }//excelsior
         return super.onOptionsItemSelected(item);
     }
 
-    private void setColorWhite (Drawable drawableSave)
-    {
-        if(drawableSave != null)
-        {
-            drawableSave.mutate();
-            drawableSave.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        }
-    }
 
     public void addLocation(View view)
     {
@@ -153,6 +140,31 @@ public class EntryDetailActivity extends AppCompatActivity {
     public void addDate(View view)
     {
         new DatePickerDialog(EntryDetailActivity.this, datePickerListener, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void notSaveDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Wollen Sie den Eintrag vor dem Beenden speichern?");
+        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                saveEntry();
+            }
+        });
+        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                EntryDetailActivity.this.finish();
+            }
+        });
+        builder.setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
     }
 
     private void saveEntry()
