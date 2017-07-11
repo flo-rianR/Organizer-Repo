@@ -53,9 +53,9 @@ public class EntryDetailActivity extends AppCompatActivity {
     double longit;
     MySQLiteHelper eDB;
 
-    Button btnChange, btnUpdate ;
+    Button changeButton, btnUpdate ;
 
-    ImageView entryimage;
+    ImageView theentryImage;
     final Calendar c = Calendar.getInstance();
 
     final int REQUEST_CODE_GALLERY = 999;
@@ -74,6 +74,19 @@ public class EntryDetailActivity extends AppCompatActivity {
         eDB = new MySQLiteHelper(this);
         init_Elements();
         Log.d("debugAnzahl", "in Entry");
+
+        /////////////////////////////////////////////////////////
+        changeButton = (Button)findViewById(R.id.btnChange);
+        theentryImage = (ImageView)findViewById(R.id.entryimage);
+
+        changeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 0);
+            }
+        });
+        ////////////////////////////////////////////////////////
     }
     private void init_Elements()
     {
@@ -116,6 +129,12 @@ public class EntryDetailActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        ///////////////////////////////////////////////////////////////////////////////////
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bitmap bp = (Bitmap) data.getExtras().get("data");
+        theentryImage.setImageBitmap(bp);
+        //////////////////////////////////////////////////////////////////////////////////////
         if(requestCode == 1)
         {
             if(resultCode == RESULT_OK)
@@ -197,4 +216,6 @@ public class EntryDetailActivity extends AppCompatActivity {
         this.finish();
 
     }
+
+
 }
