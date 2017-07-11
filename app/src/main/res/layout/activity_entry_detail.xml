@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="none"
-        android:text="Ort"
+        android:hint="Ort"
         android:textSize="18sp"
         android:layout_marginStart="50dp"
         android:layout_alignTop="@+id/addLocationIBtn"
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="none"
-        android:text="Straße"
+        android:hint="Straße"
         android:textSize="18sp"
         android:layout_below="@+id/LocationText"
         android:layout_alignStart="@+id/LocationText" />
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="date"
-        android:text="Datum"
+        android:hint="Datum"
         android:textSize="18sp"
         android:layout_alignTop="@+id/addDateIBtn"
         android:layout_alignStart="@+id/LocationText" />
