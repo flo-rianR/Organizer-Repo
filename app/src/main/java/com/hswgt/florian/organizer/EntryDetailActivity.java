@@ -2,9 +2,12 @@ package com.hswgt.florian.organizer;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -88,13 +91,12 @@ public class EntryDetailActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
-
+                /*
                 /////
-
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
                 /////
+                */
             }
         });
 
@@ -153,6 +155,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         startActivityForResult(i, requestCode);
     }
 
+
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         ////////////////////////////////new
@@ -160,6 +163,10 @@ public class EntryDetailActivity extends AppCompatActivity {
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
+
+                    //addEntryImage()
+
+
                     //Uri selectedImage = data.getData();
                     //theentryImage.setImageURI(selectedImage);
                     //////////////
