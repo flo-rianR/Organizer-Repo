@@ -57,7 +57,7 @@ public class EntryDetailActivity extends AppCompatActivity {
     MySQLiteHelper eDB;
     Bundle bundle;
 
-    Button changeButton, btnUpdate ;
+    Button changeButton;
 
     ImageView theentryImage;
     final Calendar c = Calendar.getInstance();
@@ -91,12 +91,7 @@ public class EntryDetailActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
-                /*
-                /////
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
-                /////
-                */
+
             }
         });
 
@@ -158,41 +153,14 @@ public class EntryDetailActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        ////////////////////////////////new
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case 0:
-                if(resultCode == RESULT_OK){
 
-                    //addEntryImage()
-
-
-                    //Uri selectedImage = data.getData();
-                    //theentryImage.setImageURI(selectedImage);
-                    //////////////
-                    super.onActivityResult(requestCode, resultCode, data);
-
-                    Bitmap bp = (Bitmap) data.getExtras().get("data");
-                    theentryImage.setImageBitmap(bp);
-                    //////////////
-                }
-
-                break;
-            case 1:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = data.getData();
-                    theentryImage.setImageURI(selectedImage);
-                }
-                break;
-        }
-        ////////////////////////////////new
         ///////////////////////////////////////////////////////////////////////////////////
-        /*
+
         super.onActivityResult(requestCode, resultCode, data);
 
         Bitmap bp = (Bitmap) data.getExtras().get("data");
         theentryImage.setImageBitmap(bp);
-        */
+
         //////////////////////////////////////////////////////////////////////////////////////
         if(requestCode == 1)
         {

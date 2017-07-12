@@ -39,8 +39,8 @@ public class EntryModel
     public String getDate() {return date;}
     public void setDate(String date){this.date = date;}
     ////////////////////////////////////////////////////////////////////////
-    public String getEntryImage() {return image;}
-    public void setEntryImage(String date){this.image = image;}
+    //public String getEntryImage() {return image;}
+    //public void setEntryImage(String date){this.image = image;}
     ////////////////////////////////////////////////////////////////////////
     public String getLocation() {return location;}
     public void setLocation(String location) {this.location = location;}
