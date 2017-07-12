@@ -259,6 +259,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         entry.setLocation(location.getText().toString());
         entry.setStreet(street.getText().toString());
 
+
         eDB.updateEntry(entry);
         Toast.makeText(this, "Eintrag geändert", Toast.LENGTH_SHORT).show();
 
