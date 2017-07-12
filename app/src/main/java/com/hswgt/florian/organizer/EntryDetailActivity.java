@@ -191,6 +191,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         theentryImage.setImageBitmap(bp);
 
         //////////////////////////////////////////////////////////////////////////////////////
+        */
         if(requestCode == 1)
         {
             if(resultCode == RESULT_OK)
@@ -200,7 +201,7 @@ public class EntryDetailActivity extends AppCompatActivity {
                 lat = data.getDoubleExtra("latkey", 0);
                 longit = data.getDoubleExtra("longkey", 0);
             }
-        }*/
+        }
     }
 
     DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
