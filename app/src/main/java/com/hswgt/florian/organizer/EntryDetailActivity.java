@@ -90,13 +90,29 @@ public class EntryDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EntryDetailActivity.this);
+                builder.setTitle("Bild mit Kamera machen oder aus Galerie auswählen?");
+                builder.setPositiveButton("Kamera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, 0);
+                    }
+                });
+                builder.setNeutralButton("Galerie", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(pickPhoto , 1);
+                    }
+                });
+                builder.show();
+
+
 
                 ////////////////////////////////////////////////////////
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+                //one can be replaced with any action code
                 ////////////////////////////////////////////////////////
 
             }
@@ -148,7 +164,7 @@ public class EntryDetailActivity extends AppCompatActivity {
 
     public void addLocation(View view)
     {
-        int requestCode = 1;
+        int requestCode = 3;
         final Intent i = new Intent(EntryDetailActivity.this, MapsActivity.class);
 //        Bundle extras = new Bundle();
 //        extras.putLong("list", id);
@@ -176,6 +192,14 @@ public class EntryDetailActivity extends AppCompatActivity {
                     theentryImage.setImageURI(selectedImage);
                 }
                 break;
+            case 3:
+                if(resultCode == RESULT_OK)
+                {
+                    location.setText(data.getStringExtra("locationkey"));
+                    street.setText(data.getStringExtra("streetkey"));
+                    lat = data.getDoubleExtra("latkey", 0);
+                    longit = data.getDoubleExtra("longkey", 0);
+                }
         }
 
 
@@ -192,16 +216,6 @@ public class EntryDetailActivity extends AppCompatActivity {
 
         //////////////////////////////////////////////////////////////////////////////////////
         */
-        if(requestCode == 1)
-        {
-            if(resultCode == RESULT_OK)
-            {
-                location.setText(data.getStringExtra("locationkey"));
-                street.setText(data.getStringExtra("streetkey"));
-                lat = data.getDoubleExtra("latkey", 0);
-                longit = data.getDoubleExtra("longkey", 0);
-            }
-        }
     }
 
     DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {

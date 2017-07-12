@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater linf = LayoutInflater.from(this);
         final View inflater = linf.inflate(R.layout.dialog_addlist, null);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         final ListModel listModel = new ListModel();
 
         final EditText input = (EditText) inflater.findViewById(R.id.addListEdittext);
