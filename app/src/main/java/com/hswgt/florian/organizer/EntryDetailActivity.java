@@ -1,26 +1,19 @@
 package com.hswgt.florian.organizer;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.DropBoxManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,15 +28,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Date;
 
 import database.EntryModel;
 import database.MySQLiteHelper;
-
-import static android.R.attr.id;
 
 public class EntryDetailActivity extends AppCompatActivity {
 
@@ -54,12 +42,12 @@ public class EntryDetailActivity extends AppCompatActivity {
     TextView date;
     double lat;
     double longit;
+    ImageView pic;
+    Bitmap bitmap;
     MySQLiteHelper eDB;
     Bundle bundle;
-
     Button changeButton;
 
-    ImageView theentryImage;
     final Calendar c = Calendar.getInstance();
 
     final int REQUEST_CODE_GALLERY = 999;
@@ -83,8 +71,6 @@ public class EntryDetailActivity extends AppCompatActivity {
 
         /////////////////////////////////////////////////////////
         changeButton = (Button)findViewById(R.id.btnChange);
-        theentryImage = (ImageView)findViewById(R.id.entryimage);
-
 
         changeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +113,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         location = (TextView) findViewById(R.id.LocationText);
         street = (TextView) findViewById(R.id.StreetText);
         date = (TextView) findViewById(R.id.DateText);
+        pic = (ImageView) findViewById(R.id.entryimage);
 
         if(bundle.getBoolean("addEditFlag"))
         {
@@ -138,6 +125,7 @@ public class EntryDetailActivity extends AppCompatActivity {
             date.setText(entryModel.getDate());
             lat = entryModel.getLatitute();
             longit = entryModel.getLongitute();
+            pic.setImageBitmap(getBitmapFromByteArray(entryModel.getEntryImage()));
         }
 
     }
@@ -182,14 +170,20 @@ public class EntryDetailActivity extends AppCompatActivity {
             case 0:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = data.getData();
-                    theentryImage.setImageURI(selectedImage);
+                    pic.setImageURI(selectedImage);
+
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = data.getData();
-                    theentryImage.setImageURI(selectedImage);
+                    pic.setImageURI(selectedImage);
                 }
                 break;
             case 3:
@@ -268,6 +262,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         String date = sdf.format(new Date());
 
         EntryModel entry = new EntryModel();
+        Bitmap bitmap = ((BitmapDrawable)pic.getDrawable()).getBitmap();
 
         entry.setName(edtName.getText().toString());
         entry.setDescription(edtDescription.getText().toString());
@@ -277,6 +272,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         entry.setLongitute(longit);
         entry.setLocation(location.getText().toString());
         entry.setStreet(street.getText().toString());
+        entry.setImage(getBitmapAsByteArray(bitmap));
         entry.setForeign_key(getIntent().getIntExtra("list", -1));
 
         eDB.addEntry(entry);
@@ -294,6 +290,7 @@ public class EntryDetailActivity extends AppCompatActivity {
             return;
         }
         EntryModel entry = new EntryModel();
+        Bitmap bitmap = ((BitmapDrawable)pic.getDrawable()).getBitmap();
 
         entry.setName(edtName.getText().toString());
         entry.setDescription(edtDescription.getText().toString());
@@ -302,6 +299,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         entry.setLongitute(longit);
         entry.setLocation(location.getText().toString());
         entry.setStreet(street.getText().toString());
+        entry.setImage(getBitmapAsByteArray(bitmap));
 
 
         eDB.updateEntry(entry);
@@ -310,5 +308,20 @@ public class EntryDetailActivity extends AppCompatActivity {
         this.finish();
     }
 
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        if(bitmap != null)
+        {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            return outputStream.toByteArray();
+        }
+        return null;
+    }
+
+    private Bitmap getBitmapFromByteArray(byte[] image)
+    {
+        if(image != null) return BitmapFactory.decodeByteArray(image, 0, image.length);
+        return null;
+    }
 
 }

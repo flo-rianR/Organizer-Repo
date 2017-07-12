@@ -118,9 +118,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         values.put(ENTRY_TABLE.KEY_DESCRIPTION, entryModel.getDescription());
         values.put(ENTRY_TABLE.KEY_CREATEDATE, entryModel.getCreated_At());
         values.put(ENTRY_TABLE.KEY_DATE, entryModel.getDate());
-        ///////////////////////////////////////////////////////////////////////////////////
-        //values.put(KEY_IMAGE, entryModel.getEntryImage());
-        ///////////////////////////////////////////////////////////////////////////////////
+        values.put(ENTRY_TABLE.KEY_IMAGE, entryModel.getEntryImage());
         values.put(ENTRY_TABLE.KEY_FOREIGN, entryModel.getForeign_key());
         values.put(ENTRY_TABLE.KEY_LOCATION, entryModel.getLocation());
         values.put(ENTRY_TABLE.KEY_LATITUTE, entryModel.getLatitute());
@@ -212,13 +210,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 entryModel.setDescription(cursor.getString(2));
                 entryModel.setCreated_At(cursor.getString(3));
                 entryModel.setDate(cursor.getString(4));
-                /////////////////////////////////////////////////
-                //entryModel.setEntryImage(cursor.getEntryImage(5));
-                /////////////////////////////////////////////////
-                entryModel.setLocation(cursor.getString(5));
-                entryModel.setLatitute(cursor.getDouble(6));
-                entryModel.setLongitute(cursor.getDouble(7));
-                entryModel.setForeign_key(cursor.getInt(8));
+                entryModel.setImage(cursor.getBlob(5));
+                entryModel.setLocation(cursor.getString(6));
+                entryModel.setLatitute(cursor.getDouble(7));
+                entryModel.setLongitute(cursor.getDouble(8));
+                entryModel.setForeign_key(cursor.getInt(9));
 
                 entries.add(entryModel);
             } while(cursor.moveToNext());

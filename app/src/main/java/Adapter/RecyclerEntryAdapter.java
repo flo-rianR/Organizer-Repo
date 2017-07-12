@@ -1,6 +1,8 @@
 package Adapter;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
         public TextView descriptionText;
         public TextView createDateText;
         public ImageButton deleteButton;
+        public ImageView imageView;
 
         public MyViewHolder(View view)
         {
@@ -49,6 +53,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
             descriptionText = (TextView) view.findViewById(R.id.entryDescText);
             createDateText = (TextView) view.findViewById(R.id.createDateText);
             deleteButton = (ImageButton) view.findViewById(R.id.delEntryIBtn);
+            imageView = (ImageView) view.findViewById(R.id.imagePreview);
         }
     }
 
@@ -74,6 +79,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
         holder.nameText.setText(entryModel.getName());
         holder.createDateText.setText(entryModel.getDate());
         holder.descriptionText.setText(entryModel.getDescription());
+        holder.imageView.setImageBitmap(getBitmapFromByteArray(entryModel.getEntryImage()));
         Log.d("Debug", entryModel.getDescription());
 
 
@@ -114,6 +120,12 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
         entries.clear();
         entries.addAll(datas);
         notifyDataSetChanged();
+    }
+    
+    private Bitmap getBitmapFromByteArray(byte[] image)
+    {
+        if(image != null) return BitmapFactory.decodeByteArray(image, 0, image.length);
+        return null;
     }
 
     public void test(View view) {
