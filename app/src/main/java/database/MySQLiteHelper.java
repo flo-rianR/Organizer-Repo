@@ -80,7 +80,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 ENTRY_TABLE.KEY_CREATEDATE + " TEXT, " +
                 ENTRY_TABLE.KEY_DATE + " TEXT, " +
                 ////////////////////////////////////////////////////////////////////////////////////
-                ENTRY_TABLE.KEY_IMAGE + " BYTE[], " +
+                ENTRY_TABLE.KEY_IMAGE + " BLOB, " +
                 ////////////////////////////////////////////////////////////////////////////////////
                 KEY_LOCATION + " TEXT, " +
                 ENTRY_TABLE.KEY_STREET + " TEXT, " +

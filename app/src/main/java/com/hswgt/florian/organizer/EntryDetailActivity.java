@@ -86,13 +86,12 @@ public class EntryDetailActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
-
+                /*
                 /////
-
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
                 /////
+                */
             }
         });
 
@@ -136,6 +135,35 @@ public class EntryDetailActivity extends AppCompatActivity {
 //        i.putExtras(extras);
         startActivityForResult(i, requestCode);
     }
+    /*
+    //insert into database
+     public void addEntryImage(byte[] image) throws SQLiteException{
+          SQLiteDatabase database = this.getWritableDatabase();
+          ContentValues cv = new  ContentValues();
+          cv.put(KEY_IMAGE,   image);
+          database.insert( DB_TABLE, null, cv );
+       }
+
+
+// convert from bitmap to byte array
+    public class DbBitmapUtility {
+
+
+        public static byte[] getBytes(Bitmap bitmap) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(CompressFormat.PNG, 0, stream);
+            return stream.toByteArray();
+        }
+
+        // convert from byte array to bitmap
+        public static Bitmap getImage(byte[] image) {
+            return BitmapFactory.decodeByteArray(image, 0, image.length);
+        }
+    }
+
+
+    */
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -144,6 +172,10 @@ public class EntryDetailActivity extends AppCompatActivity {
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
+
+                    //addEntryImage()
+
+
                     //Uri selectedImage = data.getData();
                     //theentryImage.setImageURI(selectedImage);
                     //////////////
