@@ -80,6 +80,7 @@ public class EntryDetailActivity extends AppCompatActivity {
         init_Elements();
         Log.d("debugAnzahl", "in Entry");
 
+
         /////////////////////////////////////////////////////////
         changeButton = (Button)findViewById(R.id.btnChange);
         theentryImage = (ImageView)findViewById(R.id.entryimage);
