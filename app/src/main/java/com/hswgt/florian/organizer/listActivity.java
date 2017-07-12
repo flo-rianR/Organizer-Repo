@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import Adapter.RecyclerEntryAdapter;
+import Listener.RecyclerItemClickListener;
 import database.EntryModel;
 import database.MySQLiteHelper;
 
@@ -70,7 +71,7 @@ public class listActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addEntry(View view)
+    public void addEntrya(View view)
     {
         final EntryModel entryModel = new EntryModel();
 
@@ -139,6 +140,7 @@ public class listActivity extends AppCompatActivity {
     private void listInit() {
         Intent i = getIntent();
         list = i.getIntExtra("list", -1);
+        setTitle(eDB.getListbyID(list).getList());
         Log.d("deBug", String.valueOf(list));
         entryModelList = (LinkedList<EntryModel>) eDB.getListEntries(list);
         Log.d("debug size", String.valueOf(entryModelList.size()));
@@ -154,46 +156,60 @@ public class listActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerAdapter);
-        recyclerAdapter.notifyDataSetChanged();
+        updateRecycler();
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                editEntry(position);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 
-    public void addEntryDialog(View view)
-    {
-//        addEntry(view);
-        showentry();
-    }
 
     public void addImage(View view)
     {
         //TODO Testbutton um Image hinzuzufügen add function here
         Toast.makeText(this, "Funktion hinzufügen", Toast.LENGTH_LONG).show();
-//        showentry();
+//        addEntry();
     }
 
-    public void showentry ()
+    public void addEntry(View view)
     {
-        int requestCode = 2;
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("addEditFlag", false);
+        bundle.putInt("list", getIntent().getIntExtra("list", -1));
         Intent ientry = new Intent(listActivity.this, EntryDetailActivity.class);
-        ientry.putExtra("list", getIntent().getIntExtra("list", -1));
+        ientry.putExtras(bundle);
         Log.d("debug id", String.valueOf(getIntent().getIntExtra("list", -1)));
-        startActivityForResult(ientry, requestCode);
+        startActivity(ientry);
+    }
+
+    private void editEntry(int pos)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("addEditFlag", true);
+        bundle.putInt("entry", entryModelList.get(pos).getID());
+        Intent i = new Intent(listActivity.this, EntryDetailActivity.class);
+        i.putExtras(bundle);
+        startActivity(i);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("debug back", "vvor if");
-        if(requestCode == 2)
-        {
-            if(resultCode == RESULT_OK)
-            {
-                Log.d("debug back", "back in lsit");
-                updateRecycler();
-            }
-        }
+    protected void onResume() {
+        super.onResume();
+        updateRecycler();
     }
+
     private void updateRecycler()
     {
         LinkedList<EntryModel> swaplist = (LinkedList<EntryModel>)eDB.getListEntries(list);
         recyclerAdapter.swap(swaplist);
     }
+
+
 }

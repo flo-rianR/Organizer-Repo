@@ -1,5 +1,7 @@
 package Adapter;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +19,13 @@ import database.EntryModel;
 import database.ListModel;
 import database.MySQLiteHelper;
 
+import static android.R.attr.entries;
+
 /**
  * Created by Florian on 07.07.2017.
  */
 
-public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.MyViewHolder>
+public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.MyViewHolder> implements View.OnClickListener
 {
     private List<ListModel> lists;
     private MySQLiteHelper eDB;
@@ -30,6 +34,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         public TextView listName;
         public TextView listEntryCount;
         public TextView listCreateDate;
+        public ImageButton deleteBtn;
 
         public MyViewHolder(View view)
         {
@@ -37,6 +42,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             listName = (TextView) view.findViewById(R.id.ListName);
             listEntryCount = (TextView) view.findViewById(R.id.entrycounttext);
             listCreateDate = (TextView) view.findViewById(R.id.createDatelist);
+            deleteBtn = (ImageButton) view.findViewById(R.id.deleteListIBtn);
         }
 
     }
@@ -52,6 +58,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapter_recyclerlist, parent, false);
         MyViewHolder holder = new MyViewHolder(itemView);
+        holder.deleteBtn.setOnClickListener(RecyclerListAdapter.this);
+        holder.deleteBtn.setTag(holder);
 
         return holder;
     }
@@ -68,6 +76,40 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public int getItemCount() {
         return lists.size();
+    }
+
+    @Override
+    public void onClick(final View v) {
+
+        final MyViewHolder holder = (MyViewHolder) v.getTag();
+        new AlertDialog.Builder(v.getContext())
+                .setTitle("Löschen")
+                .setMessage("Wollen Sie die Liste wirklich löschen?")
+                .setNegativeButton("Nein", null)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(holder.deleteBtn.getId() == v.getId())
+                        {
+                            deleteCompleteList(holder);
+                            lists.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(holder.getAdapterPosition());
+                            notifyItemRangeChanged(holder.getAdapterPosition(), lists.size());
+                            notifyDataSetChanged();
+                        }
+                    }
+                }).create().show();
+    }
+
+    private void deleteCompleteList(MyViewHolder holder)
+    {
+        List<EntryModel> entries = eDB.getListEntries(lists.get(holder.getAdapterPosition()).getId());
+        for(EntryModel em : entries)
+        {
+            eDB.deleteEntry(em);
+        }
+        eDB.deleteList(lists.get(holder.getAdapterPosition()));
     }
 
     public void swap(LinkedList<ListModel> datas)

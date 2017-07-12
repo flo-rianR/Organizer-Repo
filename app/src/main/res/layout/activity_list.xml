@@ -20,7 +20,7 @@
         android:layout_marginEnd="21dp"
         android:clickable="true"
         android:tint="@color/common_google_signin_btn_text_dark_default"
-        android:onClick="addEntryDialog"
+        android:onClick="addEntry"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_input_add" />
 

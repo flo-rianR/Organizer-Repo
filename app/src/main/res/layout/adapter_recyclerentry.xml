@@ -1,52 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
     <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cv"
-        card_view:cardBackgroundColor="@color/light_grey"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="3dp"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true">
+        app:cardBackgroundColor="@color/light_grey"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/imagePreview"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/ic_launcher" />
+
             <TextView
-                android:id="@+id/descriptionTextView"
-                android:textSize="20dp"
-                android:ems="10"
-                android:layout_alignParentTop="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ImageButton
-                android:id="@+id/deleteButton"
-                android:layout_width="20pt"
-                android:layout_height="20pt"
-                android:layout_alignRight="@+id/descriptionTextView"
-                android:src="@android:drawable/ic_menu_delete"
-                android:tint="@android:color/holo_blue_bright"
-                android:onClick="delete"
-                />
-
-            <Button
-                android:id="@+id/tmpButton"
+                android:id="@+id/entryNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="18sp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/imagePreview" />
+
+            <TextView
+                android:id="@+id/entryDescText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/entryNameText"
+                android:layout_toEndOf="@+id/imagePreview"
+                android:ems="10"
+                android:textSize="14sp"
+                android:layout_above="@+id/createDateText" />
+
+            <TextView
+                android:id="@+id/createDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_alignBottom="@+id/imagePreview"
+                android:layout_toEndOf="@+id/imagePreview" />
+
+            <ImageButton
+                android:id="@+id/delEntryIBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_delete_darkgrey_24dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/descriptionTextView"
-                android:text="Image"
-                android:onClick="addImage"/>
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="23dp" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

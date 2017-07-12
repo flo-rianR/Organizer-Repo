@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.R.attr.entries;
+import static android.R.attr.id;
 import static android.R.id.list;
 import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LATITUTE;
 import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LOCATION;
@@ -216,12 +218,86 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         return lists;
     }
 
+    public EntryModel getEntrybyID(int id)
+    {
+        EntryModel entryModel = new EntryModel();
+        String query = "SELECT * FROM " + TABLE_ENTRY + " WHERE " +  ENTRY_TABLE.KEY_ID + " = " + "'" + id + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst())
+        {
+            do{
+                entryModel.setID(Integer.parseInt(cursor.getString(0)));
+                entryModel.setName(cursor.getString(1));
+                entryModel.setDescription(cursor.getString(2));
+                entryModel.setCreated_At(cursor.getString(3));
+                entryModel.setDate(cursor.getString(4));
+                entryModel.setLocation(cursor.getString(5));
+                entryModel.setLatitute(cursor.getDouble(6));
+                entryModel.setLongitute(cursor.getDouble(7));
+                entryModel.setForeign_key(cursor.getInt(8));
+
+            } while(cursor.moveToNext());
+        }
+        return entryModel;
+    }
+
+    public ListModel getListbyID(int id)
+    {
+        ListModel listModel = new ListModel();
+        String query = "SELECT * FROM " + TABLE_LIST + " WHERE " +  LIST_TABLE.KEY_ID + " = " + "'" + id + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()) {
+            do {
+                listModel.setId(cursor.getInt(0));
+                listModel.setList(cursor.getString(1));
+                listModel.setCreate_At(cursor.getString(2));
+
+            } while (cursor.moveToNext());
+        }
+
+        return listModel;
+    }
+
+    public void updateEntry(EntryModel entry)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_NAME + "='" + entry.getName() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_DESCRIPTION + "='" + entry.getDescription() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_DATE + "='" + entry.getDate() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_STREET + "='" + entry.getStreet() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LOCATION + "='" + entry.getLocation() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + ENTRY_TABLE.KEY_STREET + "='" + entry.getStreet() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LATITUTE + "='" + entry.getLatitute() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        query = "UPDATE " + TABLE_ENTRY + " SET " + KEY_LONGITUTE + "='" + entry.getLongitute() + "' WHERE " + ENTRY_TABLE.KEY_ID + "='" + id + "'";
+        db.execSQL(query);
+        db.close();
+    }
+
     public void deleteEntry(EntryModel entryModel)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ENTRY,
                 ENTRY_TABLE.KEY_ID + " = ?",
                 new String[]{String.valueOf(entryModel.getID())});
+
+        db.close();
+    }
+
+    public void deleteList(ListModel listModel)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_LIST,
+                LIST_TABLE.KEY_ID + " = ?",
+                new String[]{String.valueOf(listModel.getId())});
 
         db.close();
     }

@@ -52,6 +52,7 @@ public class EntryDetailActivity extends AppCompatActivity {
     double lat;
     double longit;
     MySQLiteHelper eDB;
+    Bundle bundle;
 
     Button changeButton, btnUpdate ;
 
@@ -72,6 +73,7 @@ public class EntryDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         eDB = new MySQLiteHelper(this);
+        bundle = getIntent().getExtras();
         init_Elements();
         Log.d("debugAnzahl", "in Entry");
 
@@ -105,6 +107,19 @@ public class EntryDetailActivity extends AppCompatActivity {
         location = (TextView) findViewById(R.id.LocationText);
         street = (TextView) findViewById(R.id.StreetText);
         date = (TextView) findViewById(R.id.DateText);
+
+        if(bundle.getBoolean("addEditFlag"))
+        {
+            EntryModel entryModel = eDB.getEntrybyID(bundle.getInt("entry"));
+            edtName.setText(entryModel.getName());
+            edtDescription.setText(entryModel.getDescription());
+            location.setText(entryModel.getLocation());
+            street.setText(entryModel.getStreet());
+            date.setText(entryModel.getDate());
+            lat = entryModel.getLatitute();
+            longit = entryModel.getLongitute();
+        }
+
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_entrydetail, menu);
@@ -119,7 +134,8 @@ public class EntryDetailActivity extends AppCompatActivity {
                 notSaveDialog();
                 return true;
             case R.id.save:
-                saveEntry();
+                if(bundle.getBoolean("addEditFlag")) updateEntry();
+                if(!bundle.getBoolean("addEditFlag")) saveEntry();
                 break;
         }//excelsior
         return super.onOptionsItemSelected(item);
@@ -247,10 +263,31 @@ public class EntryDetailActivity extends AppCompatActivity {
         eDB.addEntry(entry);
         Toast.makeText(this, "Eintrag gespeichert", Toast.LENGTH_SHORT).show();
 
-        Intent i = new Intent();
-        setResult(RESULT_OK, i);
         this.finish();
 
+    }
+
+    private void updateEntry()
+    {
+        if (edtName.getText().toString().equals(""))
+        {
+            Toast.makeText(this, "Bitte Namen eingeben!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        EntryModel entry = new EntryModel();
+
+        entry.setName(edtName.getText().toString());
+        entry.setDescription(edtDescription.getText().toString());
+        entry.setDate(this.date.getText().toString());
+        entry.setLatitute(lat);
+        entry.setLongitute(longit);
+        entry.setLocation(location.getText().toString());
+        entry.setStreet(street.getText().toString());
+
+        eDB.updateEntry(entry);
+        Toast.makeText(this, "Eintrag geändert", Toast.LENGTH_SHORT).show();
+
+        this.finish();
     }
 
 

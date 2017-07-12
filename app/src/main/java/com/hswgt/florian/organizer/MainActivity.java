@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     //ArrayAdapter<String> adapter;
     private RecyclerListAdapter recyclerListAdapter;
     List<ListModel> listModels;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
