@@ -72,7 +72,7 @@ public class RecyclerEntryAdapter extends RecyclerView.Adapter<RecyclerEntryAdap
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final EntryModel entryModel = entries.get(position);
         holder.nameText.setText(entryModel.getName());
-        holder.createDateText.setText("Erstellt am: " +  entryModel.getCreated_At());
+        holder.createDateText.setText(entryModel.getDate());
         holder.descriptionText.setText(entryModel.getDescription());
         Log.d("Debug", entryModel.getDescription());
 

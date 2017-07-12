@@ -119,7 +119,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         values.put(ENTRY_TABLE.KEY_CREATEDATE, entryModel.getCreated_At());
         values.put(ENTRY_TABLE.KEY_DATE, entryModel.getDate());
         ///////////////////////////////////////////////////////////////////////////////////
-        //values.put(KEY_IMAGE, entryModel.getEntryImage());
+        values.put(KEY_IMAGE, entryModel.getEntryImage());
         ///////////////////////////////////////////////////////////////////////////////////
         values.put(ENTRY_TABLE.KEY_FOREIGN, entryModel.getForeign_key());
         values.put(ENTRY_TABLE.KEY_LOCATION, entryModel.getLocation());
@@ -147,7 +147,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     }
 
 
-/*
+
 
     // convert from bitmap to byte array
     public class DbBitmapUtility {
@@ -163,7 +163,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         public static Bitmap getImage(byte[] image) {
             return BitmapFactory.decodeByteArray(image, 0, image.length);
         }
-    }*/
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 /*
     public void insertImagetoEntry(long id, byte[] entryimage) {
