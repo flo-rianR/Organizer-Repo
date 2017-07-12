@@ -92,6 +92,12 @@ public class EntryDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
 
+                ////////////////////////////////////////////////////////
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+                ////////////////////////////////////////////////////////
+
             }
         });
 
@@ -153,9 +159,31 @@ public class EntryDetailActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        ////////////////////////////////////////////////////////
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case 0:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = data.getData();
+                    theentryImage.setImageURI(selectedImage);
+                }
 
+                break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = data.getData();
+                    theentryImage.setImageURI(selectedImage);
+                }
+                break;
+        }
+
+
+
+
+
+        ////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////
-
+/*
         super.onActivityResult(requestCode, resultCode, data);
 
         Bitmap bp = (Bitmap) data.getExtras().get("data");
@@ -171,7 +199,7 @@ public class EntryDetailActivity extends AppCompatActivity {
                 lat = data.getDoubleExtra("latkey", 0);
                 longit = data.getDoubleExtra("longkey", 0);
             }
-        }
+        }*/
     }
 
     DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
