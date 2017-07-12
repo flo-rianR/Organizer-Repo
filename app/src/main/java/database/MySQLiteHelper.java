@@ -6,15 +6,20 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import static android.R.id.list;
+import static database.MySQLiteHelper.ENTRY_TABLE.KEY_IMAGE;
 import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LATITUTE;
 import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LOCATION;
 import static database.MySQLiteHelper.ENTRY_TABLE.KEY_LONGITUTE;
@@ -80,7 +85,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 ENTRY_TABLE.KEY_CREATEDATE + " TEXT, " +
                 ENTRY_TABLE.KEY_DATE + " TEXT, " +
                 ////////////////////////////////////////////////////////////////////////////////////
-                ENTRY_TABLE.KEY_IMAGE + " BLOB, " +
+                KEY_IMAGE + " BLOB, " +
                 ////////////////////////////////////////////////////////////////////////////////////
                 KEY_LOCATION + " TEXT, " +
                 ENTRY_TABLE.KEY_STREET + " TEXT, " +
@@ -111,14 +116,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         values.put(ENTRY_TABLE.KEY_DESCRIPTION, entryModel.getDescription());
         values.put(ENTRY_TABLE.KEY_CREATEDATE, entryModel.getCreated_At());
         values.put(ENTRY_TABLE.KEY_DATE, entryModel.getDate());
+        ///////////////////////////////////////////////////////////////////////////////////
+        values.put(KEY_IMAGE, entryModel.getEntryImage());
+        ///////////////////////////////////////////////////////////////////////////////////
         values.put(ENTRY_TABLE.KEY_FOREIGN, entryModel.getForeign_key());
         values.put(ENTRY_TABLE.KEY_LOCATION, entryModel.getLocation());
         values.put(ENTRY_TABLE.KEY_LATITUTE, entryModel.getLatitute());
         values.put(ENTRY_TABLE.KEY_LONGITUTE, entryModel.getLongitute());
         values.put(ENTRY_TABLE.KEY_STREET, entryModel.getStreet());
-        long id = db.insert(TABLE_ENTRY,
-                null,
-                values);
+        long id = db.insert(TABLE_ENTRY, null,values);
+
         db.close();
         return id;
     }
@@ -137,6 +144,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         db.close();
     }
 
+
+
+
+    // convert from bitmap to byte array
+    public class DbBitmapUtility {
+
+
+        public static byte[] getBytes(Bitmap bitmap) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+            return stream.toByteArray();
+        }
+
+        // convert from byte array to bitmap
+        public static Bitmap getImage(byte[] image) {
+            return BitmapFactory.decodeByteArray(image, 0, image.length);
+        }
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 /*
     public void insertImagetoEntry(long id, byte[] entryimage) {
@@ -184,6 +209,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper
                 entryModel.setDescription(cursor.getString(2));
                 entryModel.setCreated_At(cursor.getString(3));
                 entryModel.setDate(cursor.getString(4));
+                /////////////////////////////////////////////////
+                //entryModel.setEntryImage(cursor.getEntryImage(5));
+                /////////////////////////////////////////////////
                 entryModel.setLocation(cursor.getString(5));
                 entryModel.setLatitute(cursor.getDouble(6));
                 entryModel.setLongitute(cursor.getDouble(7));

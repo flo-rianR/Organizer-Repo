@@ -2,9 +2,12 @@ package com.hswgt.florian.organizer;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -135,34 +138,6 @@ public class EntryDetailActivity extends AppCompatActivity {
 //        i.putExtras(extras);
         startActivityForResult(i, requestCode);
     }
-    /*
-    //insert into database
-     public void addEntryImage(byte[] image) throws SQLiteException{
-          SQLiteDatabase database = this.getWritableDatabase();
-          ContentValues cv = new  ContentValues();
-          cv.put(KEY_IMAGE,   image);
-          database.insert( DB_TABLE, null, cv );
-       }
-
-
-// convert from bitmap to byte array
-    public class DbBitmapUtility {
-
-
-        public static byte[] getBytes(Bitmap bitmap) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(CompressFormat.PNG, 0, stream);
-            return stream.toByteArray();
-        }
-
-        // convert from byte array to bitmap
-        public static Bitmap getImage(byte[] image) {
-            return BitmapFactory.decodeByteArray(image, 0, image.length);
-        }
-    }
-
-
-    */
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
